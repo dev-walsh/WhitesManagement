@@ -33,7 +33,7 @@ class DataManager:
         if not os.path.exists(self.machines_file):
             machine_columns = [
                 'machine_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 
-                'machine_type', 'status', 'hours', 'defects', 'notes'
+                'machine_type', 'daily_rate', 'weekly_rate', 'status', 'hours', 'defects', 'notes'
             ]
             empty_df = pd.DataFrame(columns=machine_columns)
             empty_df.to_csv(self.machines_file, index=False)
@@ -86,7 +86,7 @@ class DataManager:
         except (FileNotFoundError, pd.errors.EmptyDataError):
             return pd.DataFrame(columns=[
                 'machine_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 
-                'machine_type', 'status', 'hours', 'defects', 'notes'
+                'machine_type', 'daily_rate', 'weekly_rate', 'status', 'hours', 'defects', 'notes'
             ])
     
     def load_maintenance(self):

@@ -26,7 +26,7 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Primary Storage**: CSV files (vehicles.csv, maintenance.csv, equipment.csv, rentals.csv) stored in a local /data directory
 - **Data Structure**: 
   - Road Vehicles: ID, Whites ID, VIN/chassis, make, model, year, weight, license plate, vehicle type, status (On Hire/Off Hire), mileage, defects, notes
-  - Plant Machines: ID, Whites ID, VIN/chassis, make, model, year, weight, machine type, status (Active/Inactive/Under Maintenance), operating hours, defects, notes
+  - Plant Machines: ID, Whites ID, VIN/chassis, make, model, year, weight, machine type, daily rate (£), weekly rate (£), status (Active/Inactive/Under Maintenance), operating hours, defects, notes
   - Maintenance: ID, vehicle ID, date, type, description, cost (£), mileage, service provider, next due mileage
   - Equipment: ID, name, category, brand, model, serial number, daily rate (£), weekly rate (£), purchase price (£), status, notes
   - Rentals: ID, equipment ID, customer details, start/return dates, rental rate (£), deposit (£), status
@@ -136,8 +136,10 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Updated Navigation**: All pages now include both "Road Vehicles" and "Plant Machines" in Fleet Management section
 - **Machine-Specific Features**:
   - Operating hours tracking instead of mileage for plant machines
-  - Machine types: Excavator, Bulldozer, Crane, Forklift, Loader, Compactor, Generator, Other
+  - Machine types: Excavator, Bulldozer, Crane, Forklift, Loader, Compactor, Generator, Telehandler, Dumper, Roller, Other (with custom type option)
   - Status options: Active, Inactive, Under Maintenance
+  - Daily and weekly rental rates for machine hire (similar to equipment hire)
+  - Rental statistics and revenue tracking capabilities
 - **Batch File Updates**: Added xlsxwriter>=3.0.0 to all Windows installation files
 - **System Requirements**: Updated all .bat files to include Excel export dependencies
 

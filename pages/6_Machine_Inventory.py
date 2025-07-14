@@ -199,6 +199,10 @@ def main():
                         st.write(f"**Year:** {machine['year']}")
                         st.write(f"**Weight:** {machine['weight']} tonnes")
                         st.write(f"**Hours:** {machine['hours']:,.0f}")
+                        if machine.get('daily_rate') and machine['daily_rate'] > 0:
+                            st.write(f"**Daily Rate:** £{machine['daily_rate']:.2f}")
+                        if machine.get('weekly_rate') and machine['weekly_rate'] > 0:
+                            st.write(f"**Weekly Rate:** £{machine['weekly_rate']:.2f}")
                     
                     with col3:
                         st.write(f"**VIN/Chassis:** {machine['vin_chassis']}")
@@ -238,6 +242,8 @@ def main():
                     year = st.number_input("Year *", min_value=1900, max_value=datetime.now().year + 1, value=int(machine['year']))
                     weight = st.number_input("Weight (tonnes) *", min_value=0.1, step=0.1, value=float(machine['weight']))
                     vin_chassis = st.text_input("VIN/Chassis Number", value=machine['vin_chassis'])
+                    daily_rate = st.number_input("Daily Rate (£)", min_value=0.0, step=0.01, value=float(machine.get('daily_rate', 0.0)), format="%.2f")
+                    weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, step=0.01, value=float(machine.get('weekly_rate', 0.0)), format="%.2f")
                 
                 with col2:
                     # Machine type with custom option
@@ -278,6 +284,8 @@ def main():
                             'year': year,
                             'weight': weight,
                             'machine_type': machine_type,
+                            'daily_rate': daily_rate,
+                            'weekly_rate': weekly_rate,
                             'status': status,
                             'hours': hours,
                             'defects': defects,
@@ -309,6 +317,8 @@ def main():
                 year = st.number_input("Year *", min_value=1900, max_value=datetime.now().year + 1, value=datetime.now().year)
                 weight = st.number_input("Weight (tonnes) *", min_value=0.1, step=0.1, value=1.0)
                 vin_chassis = st.text_input("VIN/Chassis Number")
+                daily_rate = st.number_input("Daily Rate (£)", min_value=0.0, step=0.01, value=0.0, format="%.2f")
+                weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, step=0.01, value=0.0, format="%.2f")
             
             with col2:
                 machine_types = ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Telehandler", "Dumper", "Roller", "Other"]
@@ -347,6 +357,8 @@ def main():
                             'year': year,
                             'weight': weight,
                             'machine_type': machine_type,
+                            'daily_rate': daily_rate,
+                            'weekly_rate': weekly_rate,
                             'status': status,
                             'hours': hours,
                             'defects': defects,
@@ -378,8 +390,9 @@ def main():
                 st.metric("Average Hours", f"{avg_hours:,.0f}")
             
             with col4:
-                total_weight = machines_df['weight'].sum()
-                st.metric("Total Weight", f"{total_weight:.1f} tonnes")
+                machines_with_rates = machines_df[(machines_df.get('daily_rate', 0) > 0) | (machines_df.get('weekly_rate', 0) > 0)]
+                rentable_machines = len(machines_with_rates)
+                st.metric("Rentable Machines", rentable_machines)
             
             # Status distribution
             st.markdown('<div class="section-header">Status Distribution</div>', unsafe_allow_html=True)
@@ -390,6 +403,32 @@ def main():
             st.markdown('<div class="section-header">Machine Type Distribution</div>', unsafe_allow_html=True)
             type_counts = machines_df['machine_type'].value_counts()
             st.bar_chart(type_counts)
+            
+            # Rental rates summary
+            if not machines_df.empty and 'daily_rate' in machines_df.columns:
+                st.markdown('<div class="section-header">Rental Rates Summary</div>', unsafe_allow_html=True)
+                
+                col1, col2, col3 = st.columns(3)
+                
+                with col1:
+                    avg_daily = machines_df[machines_df['daily_rate'] > 0]['daily_rate'].mean() if len(machines_df[machines_df['daily_rate'] > 0]) > 0 else 0
+                    st.metric("Average Daily Rate", f"£{avg_daily:.2f}")
+                
+                with col2:
+                    avg_weekly = machines_df[machines_df['weekly_rate'] > 0]['weekly_rate'].mean() if len(machines_df[machines_df['weekly_rate'] > 0]) > 0 else 0
+                    st.metric("Average Weekly Rate", f"£{avg_weekly:.2f}")
+                
+                with col3:
+                    total_potential_daily = machines_df[machines_df['daily_rate'] > 0]['daily_rate'].sum()
+                    st.metric("Total Daily Potential", f"£{total_potential_daily:.2f}")
+                
+                # Top rental rates
+                machines_with_rates = machines_df[machines_df['daily_rate'] > 0].copy()
+                if not machines_with_rates.empty:
+                    st.markdown("**Top Daily Rates:**")
+                    top_machines = machines_with_rates.nlargest(5, 'daily_rate')[['whites_id', 'make', 'model', 'machine_type', 'daily_rate']]
+                    for _, machine in top_machines.iterrows():
+                        st.write(f"• {machine['whites_id']} - {machine['make']} {machine['model']} ({machine['machine_type']}): £{machine['daily_rate']:.2f}/day")
 
     with tab4:
         st.markdown('<div class="section-header">Import/Export Data</div>', unsafe_allow_html=True)
