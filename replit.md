@@ -1,0 +1,109 @@
+# Fleet Management System
+
+## Overview
+
+This is a Streamlit-based Fleet Management System designed to track vehicle inventory and maintenance records. The application provides a web interface for managing a fleet of vehicles, logging maintenance activities, and visualizing fleet data through an interactive dashboard.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: Streamlit - chosen for rapid development of data-driven web applications
+- **Multi-page Structure**: Uses Streamlit's native page system with a main app.py and separate page modules
+- **Layout**: Wide layout with sidebar navigation for optimal data presentation
+- **Visualization**: Plotly integration for interactive charts and graphs
+
+### Backend Architecture
+- **Data Layer**: CSV-based file storage system managed through a centralized DataManager class
+- **Business Logic**: Utility modules for data validation and management operations
+- **Session Management**: Streamlit's built-in caching system for performance optimization
+
+### Data Storage
+- **Primary Storage**: CSV files (vehicles.csv, maintenance.csv) stored in a local /data directory
+- **Data Structure**: 
+  - Vehicles: ID, make, model, year, VIN, license plate, status, mileage, purchase date
+  - Maintenance: ID, vehicle ID, date, type, description, cost, mileage, service provider, next due mileage
+- **Data Persistence**: File-based system with automatic directory and file creation
+
+## Key Components
+
+### 1. Main Application (app.py)
+- **Purpose**: Entry point and dashboard overview
+- **Features**: Quick statistics display, navigation hub
+- **Caching**: Uses @st.cache_resource for DataManager singleton
+
+### 2. Vehicle Inventory Management (pages/1_Vehicle_Inventory.py)
+- **Purpose**: CRUD operations for vehicle records
+- **Features**: Add vehicles, view inventory, search/filter functionality, import/export capabilities
+- **Validation**: VIN and year validation through utility functions
+
+### 3. Maintenance Records (pages/2_Maintenance_Records.py)
+- **Purpose**: Track and manage vehicle maintenance activities
+- **Features**: Log maintenance, view history, upcoming due dates, filtering options
+- **Dependencies**: Requires existing vehicles before maintenance can be logged
+
+### 4. Dashboard (pages/3_Dashboard.py)
+- **Purpose**: Data visualization and analytics
+- **Features**: Key metrics display, interactive charts using Plotly
+- **Analytics**: Fleet status overview, maintenance trends visualization
+
+### 5. Data Management Layer (utils/data_manager.py)
+- **Purpose**: Centralized data operations and CSV file management
+- **Features**: File creation, data loading/saving, directory management
+- **Error Handling**: Graceful handling of missing files and empty data scenarios
+
+### 6. Validation Layer (utils/validators.py)
+- **Purpose**: Data validation for vehicle information
+- **Features**: VIN validation (17-character format), year validation, license plate validation
+- **Standards**: Follows automotive industry VIN standards
+
+## Data Flow
+
+1. **User Interaction**: Users interact through Streamlit web interface
+2. **Data Validation**: Input validation occurs at the utility layer
+3. **Data Processing**: DataManager handles all CSV file operations
+4. **State Management**: Streamlit manages session state and caching
+5. **Data Persistence**: All changes are immediately written to CSV files
+6. **Visualization**: Dashboard pulls data for real-time analytics display
+
+## External Dependencies
+
+### Python Packages
+- **streamlit**: Web application framework
+- **pandas**: Data manipulation and analysis
+- **plotly**: Interactive visualization library
+- **datetime**: Date and time handling (built-in)
+- **os/sys**: File system operations (built-in)
+- **uuid**: Unique identifier generation (built-in)
+- **re**: Regular expressions for validation (built-in)
+
+### Data Dependencies
+- Local file system access for CSV storage
+- No external databases or APIs required
+
+## Deployment Strategy
+
+### Current Architecture
+- **Type**: Single-machine deployment suitable for small to medium fleets
+- **Storage**: Local file system with CSV files
+- **Scalability**: Limited by single-machine resources and file-based storage
+
+### Deployment Considerations
+- Requires Python environment with Streamlit
+- Data directory must be writable for CSV file operations
+- Session state is maintained per user session
+- No authentication or multi-user management implemented
+
+### Future Scalability Options
+- Database migration path available (structure supports SQL database integration)
+- Multi-user authentication can be added
+- Cloud deployment possible with data migration strategy
+- API layer can be introduced for external integrations
+
+### Performance Characteristics
+- **Strengths**: Simple setup, no database overhead, fast for small datasets
+- **Limitations**: File locking issues with concurrent users, limited query capabilities
+- **Optimization**: Pandas caching reduces file read operations
