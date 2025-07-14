@@ -333,7 +333,6 @@ def main():
             with col2:
                 daily_rate = st.number_input("Daily Rate (£) *", min_value=0.0, format="%.2f")
                 weekly_rate = st.number_input("Weekly Rate (£) *", min_value=0.0, format="%.2f")
-                purchase_price = st.number_input("Purchase Price (£) *", min_value=0.0, format="%.2f")
                 purchase_date = st.date_input("Purchase Date *", value=date.today())
                 status = st.selectbox("Status *", ["Available", "Maintenance", "Out of Service"])
             
@@ -351,7 +350,7 @@ def main():
                         'serial_number': serial_number,
                         'daily_rate': daily_rate,
                         'weekly_rate': weekly_rate,
-                        'purchase_price': purchase_price,
+                        'purchase_price': 0.0,  # Set default value
                         'purchase_date': purchase_date.strftime('%Y-%m-%d'),
                         'status': status,
                         'notes': notes
