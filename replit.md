@@ -25,7 +25,8 @@ Business requirement: Complete offline operation for business use with tool hire
 ### Data Storage
 - **Primary Storage**: CSV files (vehicles.csv, maintenance.csv, equipment.csv, rentals.csv) stored in a local /data directory
 - **Data Structure**: 
-  - Vehicles: ID, Whites ID, make, model, year, weight, license plate, vehicle type, status (On Hire/Off Hire), mileage, defects, notes
+  - Road Vehicles: ID, Whites ID, VIN/chassis, make, model, year, weight, license plate, vehicle type, status (On Hire/Off Hire), mileage, defects, notes
+  - Plant Machines: ID, Whites ID, VIN/chassis, make, model, year, weight, machine type, status (Active/Inactive/Under Maintenance), operating hours, defects, notes
   - Maintenance: ID, vehicle ID, date, type, description, cost (£), mileage, service provider, next due mileage
   - Equipment: ID, name, category, brand, model, serial number, daily rate (£), weekly rate (£), purchase price (£), status, notes
   - Rentals: ID, equipment ID, customer details, start/return dates, rental rate (£), deposit (£), status
@@ -38,10 +39,15 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Features**: Quick statistics display, navigation hub
 - **Caching**: Uses @st.cache_resource for DataManager singleton
 
-### 2. Vehicle Inventory Management (pages/1_Vehicle_Inventory.py)
-- **Purpose**: CRUD operations for vehicle records
-- **Features**: Add vehicles, view inventory, search/filter functionality, import/export capabilities
-- **Validation**: VIN and year validation through utility functions
+### 2. Road Vehicle Inventory Management (pages/1_Vehicle_Inventory.py)
+- **Purpose**: CRUD operations for road vehicle records
+- **Features**: Add vehicles, view inventory, search/filter functionality, import/export capabilities, VIN/chassis number tracking
+- **Validation**: VIN, year, and weight validation through utility functions
+
+### 3. Plant Machine Inventory Management (pages/6_Machine_Inventory.py)
+- **Purpose**: CRUD operations for plant machine records (excavators, bulldozers, cranes, etc.)
+- **Features**: Add machines, view inventory, search/filter functionality, import/export capabilities, operating hours tracking
+- **Validation**: Year, weight, and hours validation through utility functions
 
 ### 3. Maintenance Records (pages/2_Maintenance_Records.py)
 - **Purpose**: Track and manage vehicle maintenance activities
@@ -61,7 +67,7 @@ Business requirement: Complete offline operation for business use with tool hire
 ### 6. Data Management Layer (utils/data_manager.py)
 - **Purpose**: Centralized data operations and CSV file management for all business functions
 - **Features**: File creation, data loading/saving, directory management, equipment and rental operations
-- **Data Files**: vehicles.csv, maintenance.csv, equipment.csv, rentals.csv
+- **Data Files**: vehicles.csv, machines.csv, maintenance.csv, equipment.csv, rentals.csv
 - **Error Handling**: Graceful handling of missing files and empty data scenarios
 
 ### 7. Validation Layer (utils/validators.py)
@@ -119,6 +125,21 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Optimization**: Pandas caching reduces file read operations
 
 ## Recent Updates (July 2025)
+
+### Machine Inventory Implementation (July 14, 2025)
+- **Separated Fleet Management**: Distinguished between road vehicles and plant machines
+- **New Machine Inventory Page**: Added pages/6_Machine_Inventory.py for plant vehicle management
+- **Enhanced Data Structure**: 
+  - Added VIN/chassis number field to both vehicles and machines (no character limit)
+  - Created separate machines.csv file for plant vehicles
+  - Updated DataManager with machine-specific operations (add_machine, update_machine, delete_machine)
+- **Updated Navigation**: All pages now include both "Road Vehicles" and "Plant Machines" in Fleet Management section
+- **Machine-Specific Features**:
+  - Operating hours tracking instead of mileage for plant machines
+  - Machine types: Excavator, Bulldozer, Crane, Forklift, Loader, Compactor, Generator, Other
+  - Status options: Active, Inactive, Under Maintenance
+- **Batch File Updates**: Added xlsxwriter>=3.0.0 to all Windows installation files
+- **System Requirements**: Updated all .bat files to include Excel export dependencies
 
 ### UI/UX Improvements
 - **Enhanced Styling**: Added professional CSS styling across all pages with consistent color scheme (#1f77b4)

@@ -6,6 +6,7 @@ from datetime import datetime
 class DataManager:
     def __init__(self):
         self.vehicles_file = "data/vehicles.csv"
+        self.machines_file = "data/machines.csv"
         self.maintenance_file = "data/maintenance.csv"
         self.equipment_file = "data/equipment.csv"
         self.rentals_file = "data/rentals.csv"
@@ -19,14 +20,23 @@ class DataManager:
     
     def ensure_csv_files(self):
         """Create CSV files with headers if they don't exist"""
-        # Vehicle CSV headers
+        # Vehicle CSV headers (Road Vehicles)
         if not os.path.exists(self.vehicles_file):
             vehicle_columns = [
-                'vehicle_id', 'whites_id', 'make', 'model', 'year', 'weight', 'license_plate', 
+                'vehicle_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 'license_plate', 
                 'vehicle_type', 'status', 'mileage', 'defects', 'notes'
             ]
             empty_df = pd.DataFrame(columns=vehicle_columns)
             empty_df.to_csv(self.vehicles_file, index=False)
+        
+        # Machine CSV headers (Plant Vehicles)
+        if not os.path.exists(self.machines_file):
+            machine_columns = [
+                'machine_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 
+                'machine_type', 'status', 'hours', 'defects', 'notes'
+            ]
+            empty_df = pd.DataFrame(columns=machine_columns)
+            empty_df.to_csv(self.machines_file, index=False)
         
         # Maintenance CSV headers
         if not os.path.exists(self.maintenance_file):
@@ -58,14 +68,25 @@ class DataManager:
             empty_df.to_csv(self.rentals_file, index=False)
     
     def load_vehicles(self):
-        """Load vehicles from CSV"""
+        """Load vehicles from CSV (Road Vehicles)"""
         try:
             df = pd.read_csv(self.vehicles_file)
             return df
         except (FileNotFoundError, pd.errors.EmptyDataError):
             return pd.DataFrame(columns=[
-                'vehicle_id', 'whites_id', 'make', 'model', 'year', 'weight', 'license_plate', 
+                'vehicle_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 'license_plate', 
                 'vehicle_type', 'status', 'mileage', 'defects', 'notes'
+            ])
+    
+    def load_machines(self):
+        """Load machines from CSV (Plant Vehicles)"""
+        try:
+            df = pd.read_csv(self.machines_file)
+            return df
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            return pd.DataFrame(columns=[
+                'machine_id', 'whites_id', 'vin_chassis', 'make', 'model', 'year', 'weight', 
+                'machine_type', 'status', 'hours', 'defects', 'notes'
             ])
     
     def load_maintenance(self):
@@ -80,7 +101,7 @@ class DataManager:
             ])
     
     def add_vehicle(self, vehicle_data):
-        """Add a new vehicle"""
+        """Add a new vehicle (Road Vehicle)"""
         df = self.load_vehicles()
         
         # Generate unique vehicle ID
@@ -94,8 +115,23 @@ class DataManager:
         df.to_csv(self.vehicles_file, index=False)
         return vehicle_data['vehicle_id']
     
+    def add_machine(self, machine_data):
+        """Add a new machine (Plant Vehicle)"""
+        df = self.load_machines()
+        
+        # Generate unique machine ID
+        machine_data['machine_id'] = str(uuid.uuid4())[:8]
+        
+        # Convert to DataFrame and append
+        new_machine = pd.DataFrame([machine_data])
+        df = pd.concat([df, new_machine], ignore_index=True)
+        
+        # Save to CSV
+        df.to_csv(self.machines_file, index=False)
+        return machine_data['machine_id']
+    
     def update_vehicle(self, updated_vehicle):
-        """Update an existing vehicle"""
+        """Update an existing vehicle (Road Vehicle)"""
         df = self.load_vehicles()
         
         # Find and update the vehicle
@@ -105,11 +141,28 @@ class DataManager:
         # Save to CSV
         df.to_csv(self.vehicles_file, index=False)
     
+    def update_machine(self, updated_machine):
+        """Update an existing machine (Plant Vehicle)"""
+        df = self.load_machines()
+        
+        # Find and update the machine
+        machine_id = updated_machine['machine_id']
+        df.loc[df['machine_id'] == machine_id, df.columns] = [updated_machine[col] for col in df.columns]
+        
+        # Save to CSV
+        df.to_csv(self.machines_file, index=False)
+    
     def update_vehicle_mileage(self, vehicle_id, new_mileage):
         """Update vehicle mileage"""
         df = self.load_vehicles()
         df.loc[df['vehicle_id'] == vehicle_id, 'mileage'] = new_mileage
         df.to_csv(self.vehicles_file, index=False)
+    
+    def update_machine_hours(self, machine_id, new_hours):
+        """Update machine hours"""
+        df = self.load_machines()
+        df.loc[df['machine_id'] == machine_id, 'hours'] = new_hours
+        df.to_csv(self.machines_file, index=False)
     
     def delete_vehicle(self, vehicle_id):
         """Delete a vehicle"""
@@ -120,6 +173,17 @@ class DataManager:
         # Also delete associated maintenance records
         maintenance_df = self.load_maintenance()
         maintenance_df = maintenance_df[maintenance_df['vehicle_id'] != vehicle_id]
+        maintenance_df.to_csv(self.maintenance_file, index=False)
+    
+    def delete_machine(self, machine_id):
+        """Delete a machine"""
+        df = self.load_machines()
+        df = df[df['machine_id'] != machine_id]
+        df.to_csv(self.machines_file, index=False)
+        
+        # Also delete associated maintenance records for machines
+        maintenance_df = self.load_maintenance()
+        maintenance_df = maintenance_df[maintenance_df['vehicle_id'] != machine_id]
         maintenance_df.to_csv(self.maintenance_file, index=False)
     
     def add_maintenance(self, maintenance_data):

@@ -27,8 +27,10 @@ def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
         
         # Fleet Management
         st.markdown("**Fleet Management**")
-        if st.button("🚗 Vehicle Inventory", use_container_width=True):
+        if st.button("🚗 Road Vehicles", use_container_width=True):
             st.switch_page("pages/1_Vehicle_Inventory.py")
+        if st.button("🏗️ Plant Machines", use_container_width=True):
+            st.switch_page("pages/6_Machine_Inventory.py")
         if st.button("🔧 Maintenance Records", use_container_width=True):
             st.switch_page("pages/2_Maintenance_Records.py")
         

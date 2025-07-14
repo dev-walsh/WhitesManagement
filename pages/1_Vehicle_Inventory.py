@@ -31,8 +31,10 @@ def create_sidebar():
         
         # Fleet Management
         st.markdown("**Fleet Management**")
-        if st.button("🚗 Vehicle Inventory", use_container_width=True, disabled=True):
+        if st.button("🚗 Road Vehicles", use_container_width=True, disabled=True):
             pass  # Current page
+        if st.button("🏗️ Plant Machines", use_container_width=True):
+            st.switch_page("pages/6_Machine_Inventory.py")
         if st.button("🔧 Maintenance Records", use_container_width=True):
             st.switch_page("pages/2_Maintenance_Records.py")
         
@@ -114,7 +116,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="page-header">🚗 Vehicle Inventory Management</div>', unsafe_allow_html=True)
+    st.markdown('<div class="page-header">🚗 Road Vehicle Inventory</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     
@@ -180,6 +182,7 @@ def main():
                     
                     with col1:
                         st.write(f"**Whites ID:** {whites_id}")
+                        st.write(f"**VIN/Chassis:** {vehicle.get('vin_chassis', 'N/A')}")
                         st.write(f"**Year:** {vehicle['year']}")
                         st.write(f"**Make:** {vehicle['make']}")
                         st.write(f"**Model:** {vehicle['model']}")
@@ -227,6 +230,7 @@ def main():
                             
                             with col1:
                                 new_whites_id = st.text_input("Whites ID", value=vehicle.get('whites_id', ''))
+                                new_vin_chassis = st.text_input("VIN/Chassis Number", value=vehicle.get('vin_chassis', ''))
                                 new_make = st.text_input("Make", value=vehicle['make'])
                                 new_model = st.text_input("Model", value=vehicle['model'])
                                 new_year = st.number_input("Year", min_value=1900, max_value=2030, value=int(vehicle['year']))
@@ -269,6 +273,7 @@ def main():
                                         updated_vehicle = {
                                             'vehicle_id': vehicle['vehicle_id'],
                                             'whites_id': new_whites_id,
+                                            'vin_chassis': new_vin_chassis,
                                             'make': new_make,
                                             'model': new_model,
                                             'year': new_year,
@@ -326,6 +331,7 @@ def main():
             
             with col1:
                 whites_id = st.text_input("Whites ID", placeholder="e.g., W001, W123")
+                vin_chassis = st.text_input("VIN/Chassis Number", placeholder="e.g., 1HGBH41JXMN109186")
                 make = st.text_input("Make *", placeholder="e.g., Caterpillar, JCB, Volvo")
                 model = st.text_input("Model *", placeholder="e.g., 320D, 3CX, EC220")
                 year = st.number_input("Year *", min_value=1900, max_value=2030, value=datetime.now().year)
@@ -371,6 +377,7 @@ def main():
                         # Add vehicle
                         new_vehicle = {
                             'whites_id': whites_id,
+                            'vin_chassis': vin_chassis,
                             'make': make,
                             'model': model,
                             'year': year,
