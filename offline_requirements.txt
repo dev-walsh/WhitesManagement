@@ -1,4 +1,20 @@
+# Whites Management System - Offline Requirements
+# Updated for horizontal navigation interface
+
+# Core web framework
 streamlit>=1.28.0
-pandas>=1.3.0
-plotly>=5.0.0
-xlsxwriter>=3.0.0
+
+# Data processing and management
+pandas>=2.0.0
+
+# Interactive charts and visualizations  
+plotly>=5.15.0
+
+# Excel export functionality
+xlsxwriter>=3.1.0
+
+# Excel import capabilities (optional)
+openpyxl>=3.1.0
+
+# Additional utility packages
+urllib3>=1.26.0

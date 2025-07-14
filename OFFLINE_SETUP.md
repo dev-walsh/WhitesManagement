@@ -1,30 +1,52 @@
-# Offline Fleet Management System
+# Whites Management System - Complete Offline Setup
 
 ## Overview
 
-This Fleet Management System is designed to work completely **offline** - no internet connection required! All your business data stays on your local computer, giving you complete control and privacy.
+The Whites Management System is designed to work completely **offline** - no internet connection required! This comprehensive business management solution handles your entire fleet, equipment, and maintenance operations while keeping all your data securely on your local computer.
 
 ## What Works Offline
 
 ✅ **Complete Vehicle Fleet Management**
-- Add, edit, and track all your vehicles
-- Record maintenance history and costs
-- Schedule upcoming maintenance
+- Road vehicle inventory with VIN/chassis tracking
+- Vehicle status tracking (On Hire/Off Hire/Maintenance)
+- Mileage tracking and defect management
+- Custom vehicle types with Whites ID system
+
+✅ **Plant Machine Inventory**
+- Heavy equipment management (excavators, bulldozers, cranes, etc.)
+- Operating hours tracking instead of mileage
+- Daily and weekly rental rates for machine hire
+- Machine status and maintenance scheduling
 
 ✅ **Tool & Equipment Hire Management**  
-- Manage your rental equipment inventory
-- Process customer rentals and returns
-- Track rental revenue and equipment status
+- Complete equipment rental inventory
+- Customer rental processing and returns
+- Revenue tracking and overdue alerts
+- Equipment status and availability management
+
+✅ **Maintenance Management**
+- Comprehensive maintenance record tracking
+- Cost tracking in British pounds (£)
+- Service provider management
+- Due date scheduling and alerts
+
+✅ **Modern Interface**
+- Horizontal navigation bar (no sidebar)
+- Clean, professional dashboard design
+- Real-time statistics and KPIs
+- Interactive charts and visualizations
 
 ✅ **Data Analytics & Reports**
-- View dashboard with charts and metrics
-- Export all data to CSV files
-- Generate business reports
+- Fleet overview dashboard with key metrics
+- Financial summaries and cost analysis
+- Equipment utilization reports
+- Maintenance trends and analytics
 
 ✅ **Data Import/Export**
-- Import existing data from CSV files
-- Export for backup or external use
-- Transfer data between systems
+- CSV and Excel file support
+- Bulk data import capabilities
+- Complete system backup functionality
+- Data portability between systems
 
 ## How It Stores Your Data
 
@@ -32,7 +54,8 @@ Your business data is stored in simple CSV files on your computer:
 
 ```
 data/
-├── vehicles.csv        (Your vehicle fleet)
+├── vehicles.csv        (Road vehicle fleet)
+├── machines.csv        (Plant equipment inventory)
 ├── maintenance.csv     (Service records)
 ├── equipment.csv       (Tools and equipment)
 └── rentals.csv        (Rental transactions)
@@ -55,33 +78,48 @@ If Python isn't installed on your computer:
 - Save all the application files to a folder like `FleetManagement`
 - Make sure you have all these files:
   ```
-  FleetManagement/
+  WhitesManagement/
   ├── app.py
   ├── pages/
   │   ├── 1_Vehicle_Inventory.py
   │   ├── 2_Maintenance_Records.py
   │   ├── 3_Dashboard.py
-  │   └── 4_Tool_Hire.py
+  │   ├── 4_Tool_Hire.py
+  │   ├── 5_Statistics.py
+  │   └── 6_Machine_Inventory.py
   ├── utils/
   │   ├── data_manager.py
   │   └── validators.py
-  └── .streamlit/
-      └── config.toml
+  ├── .streamlit/
+  │   └── config.toml
+  ├── install_packages.bat
+  ├── start_app.bat
+  ├── check_system.bat
+  └── backup_data.bat
   ```
 
 ### 3. Install Required Libraries (One-time setup)
-Open Command Prompt or Terminal in your FleetManagement folder and run:
+
+**Easy Method**: Double-click `install_packages.bat` (Windows)
+
+**Manual Method**: Open Command Prompt or Terminal in your WhitesManagement folder and run:
 ```bash
-pip install streamlit pandas plotly
+pip install streamlit pandas plotly xlsxwriter openpyxl
 ```
 
-### 4. Run Your Fleet Management System
-In the same folder, run:
+### 4. Run Your Whites Management System
+
+**Easy Method**: Double-click `start_app.bat` (Windows)
+
+**Manual Method**: In the same folder, run:
 ```bash
 streamlit run app.py
 ```
 
 The system will start and open in your web browser at `http://localhost:8501`
+
+### 5. Verify Installation
+Run `check_system.bat` to verify all components are working correctly.
 
 ## Daily Usage
 
