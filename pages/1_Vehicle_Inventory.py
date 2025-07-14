@@ -363,36 +363,36 @@ def main():
                     elif not year_valid:
                         st.error(year_msg)
                     else:
-                    # Check if Whites ID already exists (if provided)
-                    vehicles_df = dm.load_vehicles()
-                    if whites_id and not vehicles_df.empty and 'whites_id' in vehicles_df.columns:
-                        if whites_id in vehicles_df['whites_id'].values:
-                            st.error("A vehicle with this Whites ID already exists.")
-                            continue_process = False
+                        # Check if Whites ID already exists (if provided)
+                        vehicles_df = dm.load_vehicles()
+                        if whites_id and not vehicles_df.empty and 'whites_id' in vehicles_df.columns:
+                            if whites_id in vehicles_df['whites_id'].values:
+                                st.error("A vehicle with this Whites ID already exists.")
+                                continue_process = False
+                            else:
+                                continue_process = True
                         else:
                             continue_process = True
-                    else:
-                        continue_process = True
-                    
-                    if continue_process:
-                        # Add vehicle
-                        new_vehicle = {
-                            'whites_id': whites_id,
-                            'vin_chassis': vin_chassis,
-                            'make': make,
-                            'model': model,
-                            'year': year,
-                            'weight': weight,
-                            'license_plate': license_plate,
-                            'vehicle_type': vehicle_type,
-                            'status': status,
-                            'mileage': mileage,
-                            'defects': defects,
-                            'notes': notes
-                        }
-                        dm.add_vehicle(new_vehicle)
-                        st.success(f"Vehicle {year} {make} {model} ({vehicle_type}) added successfully!")
-                        st.rerun()
+                        
+                        if continue_process:
+                            # Add vehicle
+                            new_vehicle = {
+                                'whites_id': whites_id,
+                                'vin_chassis': vin_chassis,
+                                'make': make,
+                                'model': model,
+                                'year': year,
+                                'weight': weight,
+                                'license_plate': license_plate,
+                                'vehicle_type': vehicle_type,
+                                'status': status,
+                                'mileage': mileage,
+                                'defects': defects,
+                                'notes': notes
+                            }
+                            dm.add_vehicle(new_vehicle)
+                            st.success(f"Vehicle {year} {make} {model} ({vehicle_type}) added successfully!")
+                            st.rerun()
     
     with tab3:
         st.subheader("Import/Export Data")
