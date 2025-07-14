@@ -9,7 +9,7 @@ st.set_page_config(
     page_title="Whites Management",
     page_icon="🚗",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # Initialize data manager
@@ -17,142 +17,196 @@ st.set_page_config(
 def get_data_manager():
     return DataManager()
 
-def create_horizontal_nav(current_page="Home"):
-    """Create horizontal navigation menu at the top of the page"""
-    st.markdown("""
-    <style>
-    .nav-container {
-        background: linear-gradient(90deg, #1f77b4, #2c8fd4);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .nav-title {
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0;
-        padding: 0;
-    }
-    .nav-buttons {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-        flex-wrap: wrap;
-        margin-top: 1rem;
-    }
-    .nav-button {
-        background: rgba(255,255,255,0.2);
-        border: 1px solid rgba(255,255,255,0.3);
-        color: white;
-        padding: 0.4rem 0.8rem;
-        border-radius: 5px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-    .nav-button:hover {
-        background: rgba(255,255,255,0.3);
-        transform: translateY(-1px);
-    }
-    .nav-button.active {
-        background: white;
-        color: #1f77b4;
-        font-weight: 600;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    with st.container():
-        st.markdown('<div class="nav-container">', unsafe_allow_html=True)
-        st.markdown('<h1 class="nav-title">🚗 Whites Management</h1>', unsafe_allow_html=True)
+def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
+    """Create permanent sidebar with organized navigation and export options"""
+    with st.sidebar:
+        st.title("🚗 Whites Management")
         
-        col1, col2, col3, col4, col5, col6, col7 = st.columns([1,1,1,1,1,1,1])
+        # Navigation Section
+        st.markdown("### 📍 Navigation")
         
-        with col1:
-            if current_page == "Home":
-                st.button("🏠 Home", key="nav_home", disabled=True, use_container_width=True)
-            else:
-                if st.button("🏠 Home", key="nav_home", use_container_width=True):
-                    st.session_state.current_page = 'Home'
-                    st.rerun()
+        # Main Navigation
+        if st.button("🚗 Vehicle Inventory", use_container_width=True):
+            st.switch_page("pages/1_Vehicle_Inventory.py")
+        if st.button("🏗️ Machine Inventory", use_container_width=True):
+            st.switch_page("pages/6_Machine_Inventory.py")
+        if st.button("⚙️ Tool Hire", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
+        if st.button("📊 Dashboard", use_container_width=True):
+            st.switch_page("pages/3_Dashboard.py")
+        if st.button("📈 Statistics", use_container_width=True):
+            st.switch_page("pages/5_Statistics.py")
         
-        with col2:
-            if current_page == "Vehicle Inventory":
-                st.button("🚗 Vehicles", key="nav_vehicles", disabled=True, use_container_width=True)
-            else:
-                if st.button("🚗 Vehicles", key="nav_vehicles", use_container_width=True):
-                    st.session_state.current_page = 'Vehicle_Inventory'
-                    st.rerun()
+        # Maintenance & Reports
+        st.markdown("**Maintenance & Records**")
+        if st.button("🔧 Maintenance Records", use_container_width=True):
+            st.switch_page("pages/2_Maintenance_Records.py")
         
-        with col3:
-            if current_page == "Machine Inventory":
-                st.button("🏗️ Machines", key="nav_machines", disabled=True, use_container_width=True)
-            else:
-                if st.button("🏗️ Machines", key="nav_machines", use_container_width=True):
-                    st.session_state.current_page = 'Machine_Inventory'
-                    st.rerun()
+        # Home
+        st.markdown("**Home**")
+        if st.button("🏠 Home", use_container_width=True):
+            st.switch_page("app.py")
         
-        with col4:
-            if current_page == "Tool Hire":
-                st.button("⚙️ Tool Hire", key="nav_tools", disabled=True, use_container_width=True)
-            else:
-                if st.button("⚙️ Tool Hire", key="nav_tools", use_container_width=True):
-                    st.session_state.current_page = 'Tool_Hire'
-                    st.rerun()
+        st.markdown("---")
         
-        with col5:
-            if current_page == "Dashboard":
-                st.button("📊 Dashboard", key="nav_dashboard", disabled=True, use_container_width=True)
-            else:
-                if st.button("📊 Dashboard", key="nav_dashboard", use_container_width=True):
-                    st.session_state.current_page = 'Dashboard'
-                    st.rerun()
+        # Export Section
+        st.markdown("### 📥 Export Data")
         
-        with col6:
-            if current_page == "Statistics":
-                st.button("📈 Statistics", key="nav_stats", disabled=True, use_container_width=True)
-            else:
-                if st.button("📈 Statistics", key="nav_stats", use_container_width=True):
-                    st.session_state.current_page = 'Statistics'
-                    st.rerun()
+        # Create Excel export functions
+        def create_excel_export(dataframes, filename):
+            import io
+            import pandas as pd
+            
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                for sheet_name, df in dataframes.items():
+                    if not df.empty:
+                        df.to_excel(writer, sheet_name=sheet_name, index=False)
+            
+            return output.getvalue()
         
-        with col7:
-            if current_page == "Maintenance":
-                st.button("🔧 Maintenance", key="nav_maintenance", disabled=True, use_container_width=True)
-            else:
-                if st.button("🔧 Maintenance", key="nav_maintenance", use_container_width=True):
-                    st.session_state.current_page = 'Maintenance'
-                    st.rerun()
+        # Individual CSV exports
+        st.markdown("**CSV Format**")
         
-        st.markdown('</div>', unsafe_allow_html=True)
+        if not vehicles_df.empty:
+            csv_vehicles = vehicles_df.to_csv(index=False)
+            st.download_button(
+                label="🚗 Vehicles CSV",
+                data=csv_vehicles,
+                file_name=f"vehicles_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not maintenance_df.empty:
+            csv_maintenance = maintenance_df.to_csv(index=False)
+            st.download_button(
+                label="🔧 Maintenance CSV",
+                data=csv_maintenance,
+                file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not equipment_df.empty:
+            csv_equipment = equipment_df.to_csv(index=False)
+            st.download_button(
+                label="⚙️ Equipment CSV",
+                data=csv_equipment,
+                file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not rentals_df.empty:
+            csv_rentals = rentals_df.to_csv(index=False)
+            st.download_button(
+                label="💰 Rentals CSV",
+                data=csv_rentals,
+                file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        # Excel exports
+        st.markdown("**Excel Format**")
+        
+        # Individual Excel exports
+        if not vehicles_df.empty:
+            excel_vehicles = create_excel_export({"Vehicles": vehicles_df}, "vehicles.xlsx")
+            st.download_button(
+                label="🚗 Vehicles Excel",
+                data=excel_vehicles,
+                file_name=f"vehicles_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not maintenance_df.empty:
+            excel_maintenance = create_excel_export({"Maintenance": maintenance_df}, "maintenance.xlsx")
+            st.download_button(
+                label="🔧 Maintenance Excel",
+                data=excel_maintenance,
+                file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not equipment_df.empty:
+            excel_equipment = create_excel_export({"Equipment": equipment_df}, "equipment.xlsx")
+            st.download_button(
+                label="⚙️ Equipment Excel",
+                data=excel_equipment,
+                file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not rentals_df.empty:
+            excel_rentals = create_excel_export({"Rentals": rentals_df}, "rentals.xlsx")
+            st.download_button(
+                label="💰 Rentals Excel",
+                data=excel_rentals,
+                file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        # Combined exports
+        st.markdown("**Combined Exports**")
+        
+        if not (vehicles_df.empty and maintenance_df.empty and equipment_df.empty and rentals_df.empty):
+            # All data Excel export
+            all_data = {}
+            if not vehicles_df.empty:
+                all_data["Vehicles"] = vehicles_df
+            if not maintenance_df.empty:
+                all_data["Maintenance"] = maintenance_df
+            if not equipment_df.empty:
+                all_data["Equipment"] = equipment_df
+            if not rentals_df.empty:
+                all_data["Rentals"] = rentals_df
+            
+            excel_all = create_excel_export(all_data, "whites_data.xlsx")
+            st.download_button(
+                label="📊 All Data Excel",
+                data=excel_all,
+                file_name=f"whites_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+            
+            # ZIP export
+            import zipfile
+            import io
+            
+            zip_buffer = io.BytesIO()
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                if not vehicles_df.empty:
+                    zip_file.writestr(f"vehicles_{datetime.now().strftime('%Y%m%d')}.csv", vehicles_df.to_csv(index=False))
+                if not maintenance_df.empty:
+                    zip_file.writestr(f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv", maintenance_df.to_csv(index=False))
+                if not equipment_df.empty:
+                    zip_file.writestr(f"equipment_{datetime.now().strftime('%Y%m%d')}.csv", equipment_df.to_csv(index=False))
+                if not rentals_df.empty:
+                    zip_file.writestr(f"rentals_{datetime.now().strftime('%Y%m%d')}.csv", rentals_df.to_csv(index=False))
+            
+            st.download_button(
+                label="📦 All Data ZIP",
+                data=zip_buffer.getvalue(),
+                file_name=f"whites_data_{datetime.now().strftime('%Y%m%d')}.zip",
+                mime="application/zip",
+                use_container_width=True
+            )
+        
+        st.markdown("---")
+        st.markdown("### 💡 System Info")
+        st.info("Offline system using local CSV files. No internet required!")
 
 def main():
-    # Initialize session state for navigation
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = 'Home'
-    
     # Custom CSS for improved UI
     st.markdown("""
     <style>
-    /* Hide sidebar completely */
-    .css-1d391kg, .css-1rs6os, .stSidebar {
-        display: none !important;
-    }
-    section[data-testid="stSidebar"] {
-        display: none !important;
-    }
-    .css-1y4p8pa {
-        display: none !important;
-    }
-    /* Adjust main content area */
-    .main .block-container {
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: none;
-    }
     .main-header {
         font-size: 2.5rem;
         font-weight: 700;
@@ -213,27 +267,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    # Render page based on session state
-    if st.session_state.current_page == 'Home':
-        render_home_page()
-    elif st.session_state.current_page == 'Vehicle_Inventory':
-        st.info("📝 Vehicle Inventory page - Use the sidebar navigation to access vehicle management features.")
-    elif st.session_state.current_page == 'Machine_Inventory':
-        st.info("🏗️ Machine Inventory page - Use the sidebar navigation to access machine management features.")
-    elif st.session_state.current_page == 'Tool_Hire':
-        st.info("⚙️ Tool Hire page - Use the sidebar navigation to access equipment rental features.")
-    elif st.session_state.current_page == 'Dashboard':
-        st.info("📊 Dashboard page - Use the sidebar navigation to access analytics and reports.")
-    elif st.session_state.current_page == 'Statistics':
-        st.info("📈 Statistics page - Use the sidebar navigation to access detailed statistics.")
-    elif st.session_state.current_page == 'Maintenance':
-        st.info("🔧 Maintenance page - Use the sidebar navigation to access maintenance records.")
-
-def render_home_page():
-    """Render the home page content"""
-    # Create horizontal navigation
-    create_horizontal_nav("Home")
-    
+    st.markdown('<div class="main-header">🚗 Whites Management</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Complete vehicle, maintenance, and equipment management solution</div>', unsafe_allow_html=True)
     
     # Initialize data manager
@@ -244,16 +278,16 @@ def render_home_page():
     col1, col2, col3, col4, col5 = st.columns(5)
     
     vehicles_df = dm.load_vehicles()
-    machines_df = dm.load_machines()
     maintenance_df = dm.load_maintenance()
     equipment_df = dm.load_equipment()
     rentals_df = dm.load_rentals()
     
     with col1:
-        st.metric("Road Vehicles", len(vehicles_df))
+        st.metric("Total Vehicles", len(vehicles_df))
     
     with col2:
-        st.metric("Plant Machines", len(machines_df))
+        on_hire_vehicles = len(vehicles_df[vehicles_df['status'] == 'On Hire']) if not vehicles_df.empty else 0
+        st.metric("On Hire Vehicles", on_hire_vehicles)
     
     with col3:
         total_equipment = len(equipment_df)
@@ -278,24 +312,20 @@ def render_home_page():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        if st.button("🚗 Vehicle Inventory", use_container_width=True):
-            st.session_state.current_page = 'Vehicle_Inventory'
-            st.rerun()
+        if st.button("➕ Add New Vehicle", use_container_width=True):
+            st.switch_page("pages/1_Vehicle_Inventory.py")
     
     with col2:
-        if st.button("🏗️ Machine Inventory", use_container_width=True):
-            st.session_state.current_page = 'Machine_Inventory'
-            st.rerun()
+        if st.button("🔧 Log Maintenance", use_container_width=True):
+            st.switch_page("pages/2_Maintenance_Records.py")
     
     with col3:
-        if st.button("⚙️ Tool Hire", use_container_width=True):
-            st.session_state.current_page = 'Tool_Hire'
-            st.rerun()
+        if st.button("🔧 Add Equipment", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
     
     with col4:
-        if st.button("📊 Dashboard", use_container_width=True):
-            st.session_state.current_page = 'Dashboard'
-            st.rerun()
+        if st.button("📊 View Dashboard", use_container_width=True):
+            st.switch_page("pages/3_Dashboard.py")
     
     st.markdown("")
     
@@ -305,38 +335,51 @@ def render_home_page():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 🔧 Recent Maintenance")
+        st.markdown("### 📋 Recent Maintenance")
         if not maintenance_df.empty:
             recent_maintenance = maintenance_df.sort_values('date', ascending=False).head(5)
-            display_data = []
-            for _, record in recent_maintenance.iterrows():
-                display_data.append({
-                    'Date': record['date'],
-                    'Vehicle/Machine': record['vehicle_id'],
-                    'Type': record['type'],
-                    'Cost': f"£{record['cost']:,.2f}"
-                })
-            if display_data:
-                st.dataframe(display_data, use_container_width=True, hide_index=True)
+            # Format cost column for display
+            display_maintenance = recent_maintenance[['vehicle_id', 'date', 'type', 'cost']].copy()
+            display_maintenance['cost'] = display_maintenance['cost'].apply(lambda x: f"£{x:,.2f}")
+            st.dataframe(
+                display_maintenance,
+                use_container_width=True,
+                hide_index=True
+            )
         else:
             st.info("No maintenance records found.")
     
     with col2:
-        st.markdown("### 🏠 Recent Rentals")
+        st.markdown("### 🔧 Recent Rentals")
         if not rentals_df.empty:
             recent_rentals = rentals_df.sort_values('start_date', ascending=False).head(5)
-            display_data = []
-            for _, rental in recent_rentals.iterrows():
-                display_data.append({
-                    'Date': rental['start_date'],
-                    'Customer': rental['customer_name'],
-                    'Equipment': rental['equipment_id'],
-                    'Rate': f"£{rental['rental_rate']:,.2f}"
-                })
-            if display_data:
-                st.dataframe(display_data, use_container_width=True, hide_index=True)
+            # Merge with equipment names
+            if not equipment_df.empty:
+                recent_rentals = recent_rentals.merge(
+                    equipment_df[['equipment_id', 'name']], 
+                    on='equipment_id', 
+                    how='left'
+                )
+                display_rentals = recent_rentals[['customer_name', 'name', 'start_date', 'rental_rate']].copy()
+                display_rentals['rental_rate'] = display_rentals['rental_rate'].apply(lambda x: f"£{x:,.2f}")
+                st.dataframe(
+                    display_rentals,
+                    use_container_width=True,
+                    hide_index=True
+                )
+            else:
+                display_rentals = recent_rentals[['customer_name', 'start_date', 'rental_rate']].copy()
+                display_rentals['rental_rate'] = display_rentals['rental_rate'].apply(lambda x: f"£{x:,.2f}")
+                st.dataframe(
+                    display_rentals,
+                    use_container_width=True,
+                    hide_index=True
+                )
         else:
             st.info("No rental records found.")
+    
+    # Create permanent sidebar navigation
+    create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df)
 
 if __name__ == "__main__":
     main()

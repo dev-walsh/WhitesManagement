@@ -140,12 +140,8 @@ Business requirement: Complete offline operation for business use with tool hire
   - Status options: Active, Inactive, Under Maintenance
   - Daily and weekly rental rates for machine hire (similar to equipment hire)
   - Rental statistics and revenue tracking capabilities
-- **Windows Offline Operation Enhancements**: Complete overhaul of all Windows batch files for robust offline operation
-- **New install_offline.bat**: Dedicated script for complete offline setup with comprehensive dependency management
-- **Enhanced Dependencies**: Added urllib3, certifi, requests, numpy, python-dateutil for robust offline functionality
-- **Offline Configuration**: Automatic Streamlit configuration for optimal offline performance with Windows-specific flags
-- **Comprehensive Backup System**: Enhanced backup_data.bat with complete system backup including app files and documentation
-- **Updated Requirements**: Enhanced offline_requirements.txt with all necessary packages for complete offline functionality
+- **Batch File Updates**: Added xlsxwriter>=3.0.0 to all Windows installation files
+- **System Requirements**: Updated all .bat files to include Excel export dependencies
 
 ### UI/UX Improvements
 - **Enhanced Styling**: Added professional CSS styling across all pages with consistent color scheme (#1f77b4)
@@ -177,12 +173,8 @@ Business requirement: Complete offline operation for business use with tool hire
 - **File Export Names**: Updated export filenames to use "whites_data" prefix
 - **Navigation Structure**: Organized sidebar with Fleet Management, Equipment & Rentals, and Analytics & Reports sections
 
-### Navigation Revolution & Export Enhancements (July 14, 2025)
-- **Horizontal Navigation Implementation**: Complete transition from sidebar to horizontal navigation bar
-- **Session State Navigation**: Implemented session state-based page switching for compatibility with all Streamlit versions
-- **Sidebar Elimination**: Complete removal of sidebar interface using comprehensive CSS hiding
-- **Single-File Architecture**: Consolidated navigation system within main app.py for better compatibility
-- **Page State Management**: Dynamic content rendering based on session state navigation
+### Navigation & Export Enhancements
+- **Permanent Sidebar**: All pages now have consistent sidebar navigation with disabled state for current page
 - **Export Options**: Added comprehensive export functionality with both CSV and Excel formats
 - **Combined Exports**: All data can be exported as single Excel file or ZIP archive
-- **Professional Layout**: Clean horizontal-only interface optimized for business use
+- **Professional Layout**: Improved page layout with expanded sidebar by default

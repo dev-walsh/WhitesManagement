@@ -22,104 +22,44 @@ st.set_page_config(
 def get_data_manager():
     return DataManager()
 
-def create_horizontal_nav(current_page="Dashboard"):
-    """Create horizontal navigation menu at the top of the page"""
-    st.markdown("""
-    <style>
-    .nav-container {
-        background: linear-gradient(90deg, #1f77b4, #2c8fd4);
-        padding: 0.75rem 1rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .nav-title {
-        color: white;
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin: 0;
-        padding: 0;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    with st.container():
-        st.markdown('<div class="nav-container">', unsafe_allow_html=True)
-        st.markdown('<h1 class="nav-title">🚗 Whites Management</h1>', unsafe_allow_html=True)
+def create_sidebar():
+    """Create permanent sidebar navigation"""
+    with st.sidebar:
+        st.title("🚗 Whites Management")
         
-        col1, col2, col3, col4, col5, col6, col7 = st.columns([1,1,1,1,1,1,1])
+        # Navigation Section
+        st.markdown("### 📍 Navigation")
         
-        with col1:
-            if current_page == "Home":
-                st.button("🏠 Home", key="nav_home", disabled=True, use_container_width=True)
-            else:
-                if st.button("🏠 Home", key="nav_home", use_container_width=True):
-                    st.switch_page("app.py")
+        # Main Navigation
+        if st.button("🚗 Vehicle Inventory", use_container_width=True):
+            st.switch_page("pages/1_Vehicle_Inventory.py")
+        if st.button("🏗️ Machine Inventory", use_container_width=True):
+            st.switch_page("pages/6_Machine_Inventory.py")
+        if st.button("⚙️ Tool Hire", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
+        if st.button("📊 Dashboard", use_container_width=True, disabled=True):
+            pass  # Current page
+        if st.button("📈 Statistics", use_container_width=True):
+            st.switch_page("pages/5_Statistics.py")
         
-        with col2:
-            if current_page == "Vehicle Inventory":
-                st.button("🚗 Vehicles", key="nav_vehicles", disabled=True, use_container_width=True)
-            else:
-                if st.button("🚗 Vehicles", key="nav_vehicles", use_container_width=True):
-                    st.switch_page("pages/1_Vehicle_Inventory.py")
+        # Maintenance & Records
+        st.markdown("**Maintenance & Records**")
+        if st.button("🔧 Maintenance Records", use_container_width=True):
+            st.switch_page("pages/2_Maintenance_Records.py")
         
-        with col3:
-            if current_page == "Machine Inventory":
-                st.button("🏗️ Machines", key="nav_machines", disabled=True, use_container_width=True)
-            else:
-                if st.button("🏗️ Machines", key="nav_machines", use_container_width=True):
-                    st.switch_page("pages/6_Machine_Inventory.py")
+        # Home
+        st.markdown("**Home**")
+        if st.button("🏠 Home", use_container_width=True):
+            st.switch_page("app.py")
         
-        with col4:
-            if current_page == "Tool Hire":
-                st.button("⚙️ Tool Hire", key="nav_tools", disabled=True, use_container_width=True)
-            else:
-                if st.button("⚙️ Tool Hire", key="nav_tools", use_container_width=True):
-                    st.switch_page("pages/4_Tool_Hire.py")
-        
-        with col5:
-            if current_page == "Dashboard":
-                st.button("📊 Dashboard", key="nav_dashboard", disabled=True, use_container_width=True)
-            else:
-                if st.button("📊 Dashboard", key="nav_dashboard", use_container_width=True):
-                    st.switch_page("pages/3_Dashboard.py")
-        
-        with col6:
-            if current_page == "Statistics":
-                st.button("📈 Statistics", key="nav_stats", disabled=True, use_container_width=True)
-            else:
-                if st.button("📈 Statistics", key="nav_stats", use_container_width=True):
-                    st.switch_page("pages/5_Statistics.py")
-        
-        with col7:
-            if current_page == "Maintenance":
-                st.button("🔧 Maintenance", key="nav_maintenance", disabled=True, use_container_width=True)
-            else:
-                if st.button("🔧 Maintenance", key="nav_maintenance", use_container_width=True):
-                    st.switch_page("pages/2_Maintenance_Records.py")
-        
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown("---")
+        st.markdown("### 💡 System Info")
+        st.info("Offline system using local CSV files. No internet required!")
 
 def main():
     # Custom CSS for dashboard styling
     st.markdown("""
     <style>
-    /* Hide sidebar completely */
-    .css-1d391kg, .css-1rs6os, .stSidebar {
-        display: none !important;
-    }
-    section[data-testid="stSidebar"] {
-        display: none !important;
-    }
-    .css-1y4p8pa {
-        display: none !important;
-    }
-    /* Adjust main content area */
-    .main .block-container {
-        padding-left: 2rem;
-        padding-right: 2rem;
-        max-width: none;
-    }
     .dashboard-header {
         font-size: 2.5rem;
         font-weight: 700;
@@ -161,8 +101,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    # Create horizontal navigation
-    create_horizontal_nav("Dashboard")
+    st.markdown('<div class="dashboard-header">📊 Fleet Management Dashboard</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     vehicles_df = dm.load_vehicles()
@@ -566,7 +505,8 @@ def main():
                 use_container_width=True
             )
     
-
+    # Create permanent sidebar
+    create_sidebar()
 
 if __name__ == "__main__":
     main()
