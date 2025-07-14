@@ -16,7 +16,77 @@ def get_data_manager():
     return DataManager()
 
 def main():
-    st.title("🔧 Tool & Equipment Hire")
+    # Custom CSS for tool hire page
+    st.markdown("""
+    <style>
+    .tool-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f77b4;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .equipment-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #28a745;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .rental-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #17a2b8;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .status-available {
+        background: #28a745;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .status-rented {
+        background: #dc3545;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .status-maintenance {
+        background: #ffc107;
+        color: #212529;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 2rem 0 1rem 0;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 0.5rem;
+    }
+    .filter-section {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="tool-header">🔧 Tool & Equipment Hire</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     
@@ -24,7 +94,7 @@ def main():
     tab1, tab2, tab3, tab4, tab5 = st.tabs(["📋 View Equipment", "➕ Add Equipment", "📅 Active Rentals", "📊 Rental History", "💰 Import/Export"])
     
     with tab1:
-        st.subheader("Equipment Inventory")
+        st.markdown('<div class="section-header">Equipment Inventory</div>', unsafe_allow_html=True)
         
         equipment_df = dm.load_equipment()
         

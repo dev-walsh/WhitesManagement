@@ -17,7 +17,63 @@ def get_data_manager():
     return DataManager()
 
 def main():
-    st.title("🚗 Vehicle Inventory Management")
+    # Custom CSS for better styling
+    st.markdown("""
+    <style>
+    .page-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f77b4;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .vehicle-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #1f77b4;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin: 0.25rem 0;
+    }
+    .status-on-hire {
+        background: #28a745;
+        color: white;
+    }
+    .status-off-hire {
+        background: #17a2b8;
+        color: white;
+    }
+    .status-maintenance {
+        background: #ffc107;
+        color: #212529;
+    }
+    .form-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #dee2e6;
+    }
+    .filter-section {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="page-header">🚗 Vehicle Inventory Management</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     
@@ -25,7 +81,8 @@ def main():
     tab1, tab2, tab3 = st.tabs(["📋 View Inventory", "➕ Add Vehicle", "📊 Import/Export"])
     
     with tab1:
-        st.subheader("Current Fleet")
+        st.markdown("### Current Fleet")
+        st.markdown("")
         
         # Load vehicles
         vehicles_df = dm.load_vehicles()
@@ -216,9 +273,14 @@ def main():
             st.info("No vehicles in inventory. Add your first vehicle using the 'Add Vehicle' tab.")
     
     with tab2:
-        st.subheader("Add New Vehicle")
+        st.markdown("### Add New Vehicle")
+        st.markdown("")
         
         with st.form("add_vehicle_form"):
+            st.markdown('<div class="form-section">', unsafe_allow_html=True)
+            st.markdown("**Vehicle Details**")
+            st.markdown("")
+            
             col1, col2 = st.columns(2)
             
             with col1:

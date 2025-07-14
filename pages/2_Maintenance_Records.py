@@ -16,7 +16,62 @@ def get_data_manager():
     return DataManager()
 
 def main():
-    st.title("🔧 Maintenance Records")
+    # Custom CSS for maintenance page
+    st.markdown("""
+    <style>
+    .maintenance-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f77b4;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .maintenance-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #ffc107;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .priority-high {
+        background: #f8d7da;
+        border-left: 4px solid #dc3545;
+    }
+    .priority-medium {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+    }
+    .priority-low {
+        background: #d4edda;
+        border-left: 4px solid #28a745;
+    }
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 2rem 0 1rem 0;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 0.5rem;
+    }
+    .form-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        border: 1px solid #dee2e6;
+    }
+    .cost-display {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #dc3545;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="maintenance-header">🔧 Maintenance Records</div>', unsafe_allow_html=True)
+    st.markdown('<div style="text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 2rem;">Track and manage vehicle maintenance activities</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     
@@ -25,14 +80,14 @@ def main():
     if vehicles_df.empty:
         st.warning("No vehicles found. Please add vehicles first before logging maintenance.")
         if st.button("➕ Add Vehicles"):
-            st.switch_page("pages/1_Vehicle_Inventory.py")
+            st.info("Navigate to 'Vehicle Inventory' page using the sidebar menu")
         return
     
     # Tabs for different actions
     tab1, tab2, tab3, tab4 = st.tabs(["📋 View Records", "➕ Log Maintenance", "📅 Upcoming Due", "📊 Import/Export"])
     
     with tab1:
-        st.subheader("Maintenance History")
+        st.markdown('<div class="section-header">Maintenance History</div>', unsafe_allow_html=True)
         
         maintenance_df = dm.load_maintenance()
         

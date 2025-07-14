@@ -18,7 +18,51 @@ def get_data_manager():
     return DataManager()
 
 def main():
-    st.title("📊 Fleet Management Dashboard")
+    # Custom CSS for dashboard styling
+    st.markdown("""
+    <style>
+    .dashboard-header {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #1f77b4;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+    .metric-container {
+        background: white;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 1rem 0;
+        border-left: 4px solid #1f77b4;
+    }
+    .chart-container {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 1rem 0;
+    }
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin: 2rem 0 1rem 0;
+        border-bottom: 2px solid #1f77b4;
+        padding-bottom: 0.5rem;
+    }
+    .warning-card {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        text-align: center;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    st.markdown('<div class="dashboard-header">📊 Fleet Management Dashboard</div>', unsafe_allow_html=True)
     
     dm = get_data_manager()
     vehicles_df = dm.load_vehicles()
@@ -27,6 +71,7 @@ def main():
     rentals_df = dm.load_rentals()
     
     if vehicles_df.empty and equipment_df.empty:
+        st.markdown('<div class="warning-card">', unsafe_allow_html=True)
         st.warning("No data available. Please add vehicles and equipment first.")
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -38,10 +83,11 @@ def main():
         with col3:
             if st.button("📊 Log Maintenance"):
                 st.info("Navigate to 'Maintenance Records' page using the sidebar menu")
+        st.markdown('</div>', unsafe_allow_html=True)
         return
     
     # Key Metrics Row
-    st.subheader("📈 Key Metrics")
+    st.markdown('<div class="section-header">📈 Key Metrics</div>', unsafe_allow_html=True)
     
     col1, col2, col3, col4, col5, col6 = st.columns(6)
     
