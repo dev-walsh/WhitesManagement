@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo    Fleet Management System - System Check
+echo    Whites Management - System Check
 echo ===================================================
 echo.
 
@@ -40,6 +40,13 @@ if %errorlevel% neq 0 (
     set missing_packages=1
 )
 
+echo Checking XlsxWriter...
+python -c "import xlsxwriter; print('✓ XlsxWriter version:', xlsxwriter.__version__)" 2>nul
+if %errorlevel% neq 0 (
+    echo ✗ XlsxWriter not found
+    set missing_packages=1
+)
+
 echo.
 if defined missing_packages (
     echo Some packages are missing. To install them, run:
@@ -48,7 +55,7 @@ if defined missing_packages (
 ) else (
     echo ✓ All required packages are installed!
     echo.
-    echo System is ready to run the Fleet Management System.
+    echo System is ready to run the Whites Management System.
     echo Double-click 'start_app.bat' to start the application.
 )
 

@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo    Fleet Management System - Package Installation
+echo    Whites Management - Package Installation
 echo ===================================================
 echo.
 
@@ -27,6 +27,9 @@ pip install "pandas>=1.3.0"
 
 echo Installing Plotly...
 pip install "plotly>=5.0.0"
+
+echo Installing XlsxWriter...
+pip install "xlsxwriter>=3.0.0"
 
 echo.
 echo ===================================================

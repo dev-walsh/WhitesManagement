@@ -1,6 +1,6 @@
 @echo off
 echo ===================================================
-echo    Fleet Management System - Offline Version
+echo    Whites Management - Offline Version
 echo ===================================================
 echo.
 echo Starting the application...

@@ -1,5 +1,5 @@
 @echo off
-echo Fleet Management System Starting...
+echo Whites Management System Starting...
 echo.
 echo If this is your first time, make sure you have:
 echo 1. Installed Python 3.11
