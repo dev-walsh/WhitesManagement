@@ -8,9 +8,12 @@ def validate_weight(weight):
     """
     try:
         weight = float(weight)
-        return weight > 0
+        if weight > 0:
+            return True, ""
+        else:
+            return False, "Weight must be greater than 0 tonnes"
     except (ValueError, TypeError):
-        return False
+        return False, "Weight must be a valid number"
 
 def validate_year(year):
     """
@@ -21,9 +24,12 @@ def validate_year(year):
     
     try:
         year = int(year)
-        return 1900 <= year <= (current_year + 1)
+        if 1900 <= year <= (current_year + 1):
+            return True, ""
+        else:
+            return False, f"Year must be between 1900 and {current_year + 1}"
     except (ValueError, TypeError):
-        return False
+        return False, "Year must be a valid number"
 
 def validate_license_plate(license_plate):
     """
@@ -49,9 +55,12 @@ def validate_mileage(mileage):
     """
     try:
         mileage = float(mileage)
-        return mileage >= 0
+        if mileage >= 0:
+            return True, ""
+        else:
+            return False, "Mileage cannot be negative"
     except (ValueError, TypeError):
-        return False
+        return False, "Mileage must be a valid number"
 
 def validate_cost(cost):
     """
@@ -60,9 +69,12 @@ def validate_cost(cost):
     """
     try:
         cost = float(cost)
-        return cost >= 0
+        if cost >= 0:
+            return True, ""
+        else:
+            return False, "Cost cannot be negative"
     except (ValueError, TypeError):
-        return False
+        return False, "Cost must be a valid number"
 
 def validate_date(date_string):
     """

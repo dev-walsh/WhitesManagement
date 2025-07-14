@@ -353,11 +353,16 @@ def main():
                 # Validate inputs
                 if not all([make, model, year, weight, license_plate, vehicle_type]):
                     st.error("Please fill in all required fields marked with *")
-                elif not validate_weight(weight):
-                    st.error("Invalid weight. Weight must be a positive number.")
-                elif not validate_year(year):
-                    st.error("Invalid year. Year must be between 1900 and 2030.")
                 else:
+                    # Validate inputs
+                    weight_valid, weight_msg = validate_weight(weight)
+                    year_valid, year_msg = validate_year(year)
+                    
+                    if not weight_valid:
+                        st.error(weight_msg)
+                    elif not year_valid:
+                        st.error(year_msg)
+                    else:
                     # Check if Whites ID already exists (if provided)
                     vehicles_df = dm.load_vehicles()
                     if whites_id and not vehicles_df.empty and 'whites_id' in vehicles_df.columns:
