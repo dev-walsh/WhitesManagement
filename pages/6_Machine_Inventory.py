@@ -240,10 +240,19 @@ def main():
                     vin_chassis = st.text_input("VIN/Chassis Number", value=machine['vin_chassis'])
                 
                 with col2:
-                    machine_type = st.selectbox("Machine Type *", 
-                        ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Other"],
-                        index=["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Other"].index(machine['machine_type']) if machine['machine_type'] in ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Other"] else 7
-                    )
+                    # Machine type with custom option
+                    existing_types = ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Telehandler", "Dumper", "Roller", "Other"]
+                    current_type = machine['machine_type']
+                    if current_type not in existing_types:
+                        existing_types.append(current_type)
+                    
+                    type_option = st.selectbox("Machine Type *", existing_types + ["Add Custom..."], 
+                                             index=existing_types.index(current_type) if current_type in existing_types else len(existing_types)-1)
+                    
+                    if type_option == "Add Custom...":
+                        machine_type = st.text_input("Custom Machine Type *")
+                    else:
+                        machine_type = type_option
                     status = st.selectbox("Status *", 
                         ["Active", "Inactive", "Under Maintenance"],
                         index=["Active", "Inactive", "Under Maintenance"].index(machine['status'])
@@ -257,7 +266,10 @@ def main():
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.form_submit_button("Update Machine", type="primary"):
-                        updated_machine = {
+                        if not machine_type:
+                            st.error("Please select or enter a machine type")
+                        else:
+                            updated_machine = {
                             'machine_id': machine['machine_id'],
                             'whites_id': whites_id,
                             'vin_chassis': vin_chassis,
@@ -272,10 +284,10 @@ def main():
                             'notes': notes
                         }
                         
-                        data_manager.update_machine(updated_machine)
-                        st.success("Machine updated successfully!")
-                        del st.session_state.edit_machine
-                        st.rerun()
+                            data_manager.update_machine(updated_machine)
+                            st.success("Machine updated successfully!")
+                            del st.session_state.edit_machine
+                            st.rerun()
                 
                 with col2:
                     if st.form_submit_button("Cancel"):
@@ -299,9 +311,14 @@ def main():
                 vin_chassis = st.text_input("VIN/Chassis Number")
             
             with col2:
-                machine_type = st.selectbox("Machine Type *", 
-                    ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Other"]
-                )
+                machine_types = ["Excavator", "Bulldozer", "Crane", "Forklift", "Loader", "Compactor", "Generator", "Telehandler", "Dumper", "Roller", "Other"]
+                type_option = st.selectbox("Machine Type *", machine_types + ["Add Custom..."])
+                
+                if type_option == "Add Custom...":
+                    machine_type = st.text_input("Custom Machine Type *")
+                else:
+                    machine_type = type_option
+                
                 status = st.selectbox("Status *", ["Active", "Inactive", "Under Maintenance"], index=0)
                 hours = st.number_input("Operating Hours", min_value=0, value=0)
                 defects = st.text_area("Defects/Issues")
@@ -310,7 +327,7 @@ def main():
             st.markdown('</div>', unsafe_allow_html=True)
             
             if st.form_submit_button("Add Machine", type="primary"):
-                if not all([whites_id, make, model]):
+                if not all([whites_id, make, model, machine_type]):
                     st.error("Please fill in all required fields marked with *")
                 else:
                     # Validate inputs
