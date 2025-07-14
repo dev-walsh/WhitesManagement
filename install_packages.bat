@@ -20,13 +20,13 @@ if %errorlevel% neq 0 (
 
 REM Install packages
 echo Installing Streamlit...
-pip install streamlit==1.28.1
+pip install "streamlit>=1.28.0"
 
 echo Installing Pandas...
-pip install pandas==2.1.3
+pip install "pandas>=1.3.0"
 
 echo Installing Plotly...
-pip install plotly==5.17.0
+pip install "plotly>=5.0.0"
 
 echo.
 echo ===================================================

@@ -41,22 +41,24 @@ This guide will help you set up and run the Fleet Management System on your Wind
    - pages\ folder (with all .py files inside)
    - utils\ folder (with all .py files inside)
    - .streamlit\ folder (with config.toml)
-   - requirements.txt (see below)
-   - start_app.bat (see below)
+   - offline_requirements.txt
+   - start_app.bat
+   - start_app_simple.bat
+   - install_packages.bat
+   - check_system.bat
+   - backup_data.bat
+   - TROUBLESHOOTING.md
 
 ### Step 3: Install Required Packages
 
-1. **Create requirements.txt** in your FleetManagement folder with this content:
-   ```
-   streamlit==1.28.1
-   pandas==2.1.3
-   plotly==5.17.0
-   ```
+**Easy Method**:
+1. **Run the installer**: Double-click `install_packages.bat`
+2. **Verify installation**: Double-click `check_system.bat`
 
-2. **Install packages**:
-   - Open Command Prompt as Administrator
-   - Navigate to your folder: `cd C:\FleetManagement`
-   - Install packages: `pip install -r requirements.txt`
+**Manual Method** (if needed):
+1. Open Command Prompt as Administrator
+2. Navigate to your folder: `cd C:\FleetManagement`
+3. Install packages: `pip install -r offline_requirements.txt`
 
 ### Step 4: Create Startup Script
 
@@ -119,26 +121,22 @@ pause
 
 ## Troubleshooting
 
-### Application Won't Start
-1. Check Python installation: `python --version`
-2. Check Streamlit installation: `pip show streamlit`
-3. Ensure you're in the correct folder
-4. Check for error messages in Command Prompt
+### Quick Solutions for Common Errors
 
-### Browser Doesn't Open
-1. Manually go to: http://localhost:8501
-2. Try different browser
-3. Check if port 8501 is blocked by firewall
+**"AttributeError: module 'streamlit' has no attribute 'switch_page'"**
+- Upgrade Streamlit: `pip install --upgrade streamlit`
+- Or use sidebar navigation (this error has been fixed in the app)
 
-### Permission Errors
-1. Run Command Prompt as Administrator
-2. Check folder permissions
-3. Ensure antivirus isn't blocking files
+**Application Won't Start**
+1. Run `check_system.bat` to verify installation
+2. Check Python installation: `python --version`
+3. Try `start_app_simple.bat` instead
 
-### Data Not Saving
-1. Check if `data\` folder exists
-2. Verify write permissions to the folder
-3. Check disk space
+**Navigation Issues**
+- Use the sidebar menu to navigate between pages
+- Quick action buttons show guidance messages
+
+**See TROUBLESHOOTING.md for complete error solutions**
 
 ## Features Available Offline
 

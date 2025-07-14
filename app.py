@@ -63,19 +63,19 @@ def main():
     
     with col1:
         if st.button("➕ Add New Vehicle", use_container_width=True):
-            st.switch_page("pages/1_Vehicle_Inventory.py")
+            st.info("Navigate to 'Vehicle Inventory' page using the sidebar menu")
     
     with col2:
         if st.button("🔧 Log Maintenance", use_container_width=True):
-            st.switch_page("pages/2_Maintenance_Records.py")
+            st.info("Navigate to 'Maintenance Records' page using the sidebar menu")
     
     with col3:
         if st.button("🔧 Add Equipment", use_container_width=True):
-            st.switch_page("pages/4_Tool_Hire.py")
+            st.info("Navigate to 'Tool Hire' page using the sidebar menu")
     
     with col4:
         if st.button("📊 View Dashboard", use_container_width=True):
-            st.switch_page("pages/3_Dashboard.py")
+            st.info("Navigate to 'Dashboard' page using the sidebar menu")
     
     st.markdown("---")
     

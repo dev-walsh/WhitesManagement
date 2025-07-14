@@ -31,13 +31,13 @@ def main():
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("➕ Add Vehicles"):
-                st.switch_page("pages/1_Vehicle_Inventory.py")
+                st.info("Navigate to 'Vehicle Inventory' page using the sidebar menu")
         with col2:
             if st.button("🔧 Add Equipment"):
-                st.switch_page("pages/4_Tool_Hire.py")
+                st.info("Navigate to 'Tool Hire' page using the sidebar menu")
         with col3:
             if st.button("📊 Log Maintenance"):
-                st.switch_page("pages/2_Maintenance_Records.py")
+                st.info("Navigate to 'Maintenance Records' page using the sidebar menu")
         return
     
     # Key Metrics Row
