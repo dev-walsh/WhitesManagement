@@ -41,9 +41,13 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-REM Start the application with optimal settings
+REM Start the application with optimal offline settings
 echo Starting Whites Management System...
-python -m streamlit run app.py --server.port 8501 --server.address localhost --server.headless true --browser.gatherUsageStats false
+echo.
+echo NOTE: This system works completely offline after installation
+echo All data is stored locally in CSV files
+echo.
+python -m streamlit run app.py --server.port 8501 --server.address localhost --server.headless true --browser.gatherUsageStats false --global.disableWatchdogWarning true
 
 echo.
 echo ===================================================

@@ -28,8 +28,11 @@ echo.
 REM Change to script directory
 cd /d "%~dp0"
 
-REM Simple start with default settings
-python -m streamlit run app.py --browser.gatherUsageStats false
+REM Simple start with offline-optimized settings
+echo System will start offline mode (no internet required)
+echo All data stored locally in the 'data' folder
+echo.
+python -m streamlit run app.py --browser.gatherUsageStats false --global.disableWatchdogWarning true --server.headless true
 
 echo.
 echo Application closed.

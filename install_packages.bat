@@ -51,8 +51,15 @@ pip install "plotly>=5.15.0" --no-warn-script-location
 echo Installing XlsxWriter (Excel Export)...
 pip install "xlsxwriter>=3.1.0" --no-warn-script-location
 
-echo Installing additional utilities...
+echo Installing OpenPyXL (Excel Import/Export)...
 pip install "openpyxl>=3.1.0" --no-warn-script-location
+
+echo Installing additional utilities for offline operation...
+pip install "urllib3>=2.0.0" --no-warn-script-location
+pip install "certifi>=2023.0.0" --no-warn-script-location
+pip install "requests>=2.31.0" --no-warn-script-location
+pip install "numpy>=1.24.0" --no-warn-script-location
+pip install "python-dateutil>=2.8.0" --no-warn-script-location
 
 echo.
 echo ===================================================
@@ -65,6 +72,12 @@ echo NEXT STEPS:
 echo 1. Run 'check_system.bat' to verify installation
 echo 2. Run 'start_app.bat' to start the application
 echo 3. Access the system at http://localhost:8501
+echo.
+echo OFFLINE OPERATION:
+echo - All data stored locally in CSV files
+echo - No internet connection required after installation
+echo - Complete business management solution
+echo - Works on Windows 10/11 with Python 3.11+
 echo.
 echo FEATURES INCLUDED:
 echo - Horizontal navigation (no sidebar)

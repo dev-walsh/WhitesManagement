@@ -1,20 +1,29 @@
 # Whites Management System - Offline Requirements
-# Updated for horizontal navigation interface
+# Complete package list for Windows offline operation
+# Install with: pip install -r offline_requirements.txt
 
 # Core web framework
 streamlit>=1.28.0
 
-# Data processing and management
+# Data processing and analysis
 pandas>=2.0.0
 
-# Interactive charts and visualizations  
+# Charts and visualizations
 plotly>=5.15.0
 
-# Excel export functionality
+# Excel file operations
 xlsxwriter>=3.1.0
-
-# Excel import capabilities (optional)
 openpyxl>=3.1.0
 
-# Additional utility packages
-urllib3>=1.26.0
+# HTTP and SSL for offline compatibility
+urllib3>=2.0.0
+certifi>=2023.0.0
+requests>=2.31.0
+
+# Additional dependencies for robust offline operation
+numpy>=1.24.0
+python-dateutil>=2.8.0
+pytz>=2023.0
+
+# Optional but recommended for better performance
+fastparquet>=0.8.0
