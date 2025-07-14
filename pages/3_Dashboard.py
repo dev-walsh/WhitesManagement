@@ -104,6 +104,22 @@ def main():
     # Custom CSS for dashboard styling
     st.markdown("""
     <style>
+    /* Hide sidebar completely */
+    .css-1d391kg, .css-1rs6os, .stSidebar {
+        display: none !important;
+    }
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    .css-1y4p8pa {
+        display: none !important;
+    }
+    /* Adjust main content area */
+    .main .block-container {
+        padding-left: 2rem;
+        padding-right: 2rem;
+        max-width: none;
+    }
     .dashboard-header {
         font-size: 2.5rem;
         font-weight: 700;
