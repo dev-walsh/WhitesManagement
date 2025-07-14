@@ -28,26 +28,22 @@ def create_sidebar():
         # Navigation Section
         st.markdown("### 📍 Navigation")
         
-        # Fleet Management
-        st.markdown("**Fleet Management**")
-        if st.button("🚗 Road Vehicles", use_container_width=True):
+        # Main Navigation
+        if st.button("🚗 Vehicle Inventory", use_container_width=True):
             st.switch_page("pages/1_Vehicle_Inventory.py")
-        if st.button("🏗️ Plant Machines", use_container_width=True):
+        if st.button("🏗️ Machine Inventory", use_container_width=True):
             st.switch_page("pages/6_Machine_Inventory.py")
-        if st.button("🔧 Maintenance Records", use_container_width=True, disabled=True):
-            pass  # Current page
-        
-        # Equipment & Rentals
-        st.markdown("**Equipment & Rentals**")
-        if st.button("⚙️ Equipment Hire", use_container_width=True):
+        if st.button("⚙️ Tool Hire", use_container_width=True):
             st.switch_page("pages/4_Tool_Hire.py")
-        
-        # Analytics & Reports
-        st.markdown("**Analytics & Reports**")
         if st.button("📊 Dashboard", use_container_width=True):
             st.switch_page("pages/3_Dashboard.py")
         if st.button("📈 Statistics", use_container_width=True):
             st.switch_page("pages/5_Statistics.py")
+        
+        # Maintenance & Records
+        st.markdown("**Maintenance & Records**")
+        if st.button("🔧 Maintenance Records", use_container_width=True, disabled=True):
+            pass  # Current page
         
         # Home
         st.markdown("**Home**")
