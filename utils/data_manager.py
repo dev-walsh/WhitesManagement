@@ -22,8 +22,8 @@ class DataManager:
         # Vehicle CSV headers
         if not os.path.exists(self.vehicles_file):
             vehicle_columns = [
-                'vehicle_id', 'make', 'model', 'year', 'vin', 'license_plate', 
-                'status', 'mileage', 'purchase_date'
+                'vehicle_id', 'whites_id', 'make', 'model', 'year', 'weight', 'license_plate', 
+                'vehicle_type', 'status', 'mileage', 'defects', 'notes'
             ]
             empty_df = pd.DataFrame(columns=vehicle_columns)
             empty_df.to_csv(self.vehicles_file, index=False)
@@ -64,8 +64,8 @@ class DataManager:
             return df
         except (FileNotFoundError, pd.errors.EmptyDataError):
             return pd.DataFrame(columns=[
-                'vehicle_id', 'make', 'model', 'year', 'vin', 'license_plate', 
-                'status', 'mileage', 'purchase_date'
+                'vehicle_id', 'whites_id', 'make', 'model', 'year', 'weight', 'license_plate', 
+                'vehicle_type', 'status', 'mileage', 'defects', 'notes'
             ])
     
     def load_maintenance(self):

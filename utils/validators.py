@@ -1,26 +1,16 @@
 import re
 from datetime import datetime
 
-def validate_vin(vin):
+def validate_weight(weight):
     """
-    Validate Vehicle Identification Number (VIN)
-    VIN should be 17 characters long and contain only alphanumeric characters
-    excluding I, O, and Q
+    Validate vehicle weight in tonnes
+    Should be a positive number
     """
-    if not vin:
+    try:
+        weight = float(weight)
+        return weight > 0
+    except (ValueError, TypeError):
         return False
-    
-    # Remove any spaces and convert to uppercase
-    vin = vin.replace(" ", "").upper()
-    
-    # Check length
-    if len(vin) != 17:
-        return False
-    
-    # Check for valid characters (no I, O, Q)
-    valid_chars = re.match(r'^[ABCDEFGHJKLMNPRSTUVWXYZ0-9]{17}$', vin)
-    
-    return bool(valid_chars)
 
 def validate_year(year):
     """
@@ -101,14 +91,14 @@ def validate_vehicle_data(vehicle_data):
     errors = []
     
     # Required fields check
-    required_fields = ['make', 'model', 'year', 'vin', 'license_plate', 'status', 'mileage']
+    required_fields = ['make', 'model', 'year', 'weight', 'license_plate', 'status', 'mileage', 'vehicle_type']
     is_valid, message = validate_required_fields(vehicle_data, required_fields)
     if not is_valid:
         errors.append(message)
     
     # Specific field validations
-    if 'vin' in vehicle_data and not validate_vin(vehicle_data['vin']):
-        errors.append("Invalid VIN format")
+    if 'weight' in vehicle_data and not validate_weight(vehicle_data['weight']):
+        errors.append("Invalid weight - must be a positive number")
     
     if 'year' in vehicle_data and not validate_year(vehicle_data['year']):
         errors.append("Invalid year")
@@ -119,8 +109,8 @@ def validate_vehicle_data(vehicle_data):
     if 'mileage' in vehicle_data and not validate_mileage(vehicle_data['mileage']):
         errors.append("Invalid mileage")
     
-    if 'status' in vehicle_data and vehicle_data['status'] not in ['Active', 'Inactive', 'Maintenance']:
-        errors.append("Status must be Active, Inactive, or Maintenance")
+    if 'status' in vehicle_data and vehicle_data['status'] not in ['On Hire', 'Off Hire', 'Maintenance']:
+        errors.append("Status must be On Hire, Off Hire, or Maintenance")
     
     return len(errors) == 0, errors
 

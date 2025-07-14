@@ -72,9 +72,9 @@ def main():
             with col4:
                 if not filtered_df.empty:
                     total_value = filtered_df['purchase_price'].sum()
-                    st.metric("Total Value", f"${total_value:,.2f}")
+                    st.metric("Total Value", f"£{total_value:,.2f}")
                 else:
-                    st.metric("Total Value", "$0.00")
+                    st.metric("Total Value", "£0.00")
             
             # Display equipment
             for index, equipment in filtered_df.iterrows():
@@ -96,9 +96,9 @@ def main():
                         st.write(f"**Status:** {equipment['status']}")
                     
                     with col2:
-                        st.write(f"**Daily Rate:** ${equipment['daily_rate']:.2f}")
-                        st.write(f"**Weekly Rate:** ${equipment['weekly_rate']:.2f}")
-                        st.write(f"**Purchase Price:** ${equipment['purchase_price']:.2f}")
+                        st.write(f"**Daily Rate:** £{equipment['daily_rate']:.2f}")
+                        st.write(f"**Weekly Rate:** £{equipment['weekly_rate']:.2f}")
+                        st.write(f"**Purchase Price:** £{equipment['purchase_price']:.2f}")
                         st.write(f"**Purchase Date:** {equipment['purchase_date']}")
                         st.write(f"**Last Service:** {equipment.get('last_service_date', 'N/A')}")
                     
@@ -151,8 +151,8 @@ def main():
                                 expected_return = st.date_input("Expected Return Date *", value=date.today() + timedelta(days=1))
                                 rental_type = st.selectbox("Rental Type", ["Daily", "Weekly", "Custom"])
                                 if rental_type == "Custom":
-                                    custom_rate = st.number_input("Custom Rate", min_value=0.0, format="%.2f")
-                                deposit = st.number_input("Security Deposit", min_value=0.0, format="%.2f")
+                                    custom_rate = st.number_input("Custom Rate (£)", min_value=0.0, format="%.2f")
+                                deposit = st.number_input("Security Deposit (£)", min_value=0.0, format="%.2f")
                             
                             notes = st.text_area("Rental Notes")
                             
@@ -206,18 +206,23 @@ def main():
             
             with col1:
                 name = st.text_input("Equipment Name *", placeholder="e.g., Excavator, Generator, Drill")
-                category = st.selectbox("Category *", [
-                    "Construction", "Power Tools", "Generators", "Compressors", 
-                    "Lifting Equipment", "Vehicles", "Welding", "Safety", "Other"
-                ])
+                # Category with custom option
+                categories = ["Construction", "Power Tools", "Generators", "Compressors", 
+                            "Lifting Equipment", "Vehicles", "Welding", "Safety", "Other"]
+                category_option = st.selectbox("Category *", categories + ["Add Custom..."])
+                
+                if category_option == "Add Custom...":
+                    category = st.text_input("Custom Category *")
+                else:
+                    category = category_option
                 brand = st.text_input("Brand *", placeholder="e.g., Caterpillar, DeWalt")
                 model = st.text_input("Model *", placeholder="Model number/name")
                 serial_number = st.text_input("Serial Number", placeholder="Unique identifier")
             
             with col2:
-                daily_rate = st.number_input("Daily Rate ($) *", min_value=0.0, format="%.2f")
-                weekly_rate = st.number_input("Weekly Rate ($) *", min_value=0.0, format="%.2f")
-                purchase_price = st.number_input("Purchase Price ($) *", min_value=0.0, format="%.2f")
+                daily_rate = st.number_input("Daily Rate (£) *", min_value=0.0, format="%.2f")
+                weekly_rate = st.number_input("Weekly Rate (£) *", min_value=0.0, format="%.2f")
+                purchase_price = st.number_input("Purchase Price (£) *", min_value=0.0, format="%.2f")
                 purchase_date = st.date_input("Purchase Date *", value=date.today())
                 status = st.selectbox("Status *", ["Available", "Maintenance", "Out of Service"])
             
@@ -291,8 +296,8 @@ def main():
                         with col2:
                             st.write(f"**Start Date:** {rental['start_date']}")
                             st.write(f"**Expected Return:** {rental['expected_return_date'].strftime('%Y-%m-%d')}")
-                            st.write(f"**Rental Rate:** ${rental['rental_rate']:.2f}")
-                            st.write(f"**Deposit:** ${rental.get('deposit', 0):.2f}")
+                            st.write(f"**Rental Rate:** £{rental['rental_rate']:.2f}")
+                            st.write(f"**Deposit:** £{rental.get('deposit', 0):.2f}")
                         
                         if rental.get('notes'):
                             st.write(f"**Notes:** {rental['notes']}")
@@ -327,7 +332,7 @@ def main():
                                 return_condition = st.selectbox("Equipment Condition", 
                                                               ["Excellent", "Good", "Fair", "Damaged"])
                                 damage_notes = st.text_area("Damage/Notes")
-                                additional_charges = st.number_input("Additional Charges", min_value=0.0, format="%.2f")
+                                additional_charges = st.number_input("Additional Charges (£)", min_value=0.0, format="%.2f")
                                 
                                 col1, col2 = st.columns(2)
                                 with col1:
@@ -404,15 +409,15 @@ def main():
             with col2:
                 if not filtered_df.empty:
                     total_revenue = filtered_df['rental_rate'].sum()
-                    st.metric("Total Revenue", f"${total_revenue:.2f}")
+                    st.metric("Total Revenue", f"£{total_revenue:.2f}")
                 else:
-                    st.metric("Total Revenue", "$0.00")
+                    st.metric("Total Revenue", "£0.00")
             with col3:
                 if not filtered_df.empty:
                     avg_rental = filtered_df['rental_rate'].mean()
-                    st.metric("Average Rental", f"${avg_rental:.2f}")
+                    st.metric("Average Rental", f"£{avg_rental:.2f}")
                 else:
-                    st.metric("Average Rental", "$0.00")
+                    st.metric("Average Rental", "£0.00")
             
             # Display rentals table
             if not filtered_df.empty:

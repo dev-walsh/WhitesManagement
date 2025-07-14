@@ -7,7 +7,7 @@ import os
 # Add parent directory to path to import utils
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_manager import DataManager
-from utils.validators import validate_vin, validate_year
+from utils.validators import validate_weight, validate_year
 
 st.set_page_config(page_title="Vehicle Inventory", page_icon="🚗", layout="wide")
 
@@ -35,13 +35,13 @@ def main():
             col1, col2, col3 = st.columns(3)
             
             with col1:
-                search_term = st.text_input("🔍 Search vehicles", placeholder="Make, model, VIN...")
+                search_term = st.text_input("🔍 Search vehicles", placeholder="Make, model, Whites ID...")
             
             with col2:
-                status_filter = st.selectbox("Filter by Status", ["All", "Active", "Inactive", "Maintenance"])
+                status_filter = st.selectbox("Filter by Status", ["All", "On Hire", "Off Hire", "Maintenance"])
             
             with col3:
-                year_filter = st.selectbox("Filter by Year", ["All"] + sorted(vehicles_df['year'].unique().tolist(), reverse=True))
+                type_filter = st.selectbox("Filter by Type", ["All"] + sorted(vehicles_df['vehicle_type'].unique().tolist()) if 'vehicle_type' in vehicles_df.columns else ["All"])
             
             # Apply filters
             filtered_df = vehicles_df.copy()
@@ -50,7 +50,7 @@ def main():
                 mask = (
                     filtered_df['make'].str.contains(search_term, case=False, na=False) |
                     filtered_df['model'].str.contains(search_term, case=False, na=False) |
-                    filtered_df['vin'].str.contains(search_term, case=False, na=False) |
+                    filtered_df.get('whites_id', pd.Series()).astype(str).str.contains(search_term, case=False, na=False) |
                     filtered_df['license_plate'].str.contains(search_term, case=False, na=False)
                 )
                 filtered_df = filtered_df[mask]
@@ -58,28 +58,35 @@ def main():
             if status_filter != "All":
                 filtered_df = filtered_df[filtered_df['status'] == status_filter]
             
-            if year_filter != "All":
-                filtered_df = filtered_df[filtered_df['year'] == year_filter]
+            if type_filter != "All":
+                filtered_df = filtered_df[filtered_df['vehicle_type'] == type_filter]
             
             # Display results
             st.write(f"Showing {len(filtered_df)} of {len(vehicles_df)} vehicles")
             
             # Display vehicles in a more readable format
             for index, vehicle in filtered_df.iterrows():
-                with st.expander(f"{vehicle['year']} {vehicle['make']} {vehicle['model']} - {vehicle['license_plate']}"):
+                whites_id = vehicle.get('whites_id', 'N/A')
+                vehicle_type = vehicle.get('vehicle_type', 'Unknown')
+                with st.expander(f"{vehicle['year']} {vehicle['make']} {vehicle['model']} - {vehicle_type} (ID: {whites_id})"):
                     col1, col2 = st.columns(2)
                     
                     with col1:
-                        st.write(f"**VIN:** {vehicle['vin']}")
+                        st.write(f"**Whites ID:** {whites_id}")
                         st.write(f"**Year:** {vehicle['year']}")
                         st.write(f"**Make:** {vehicle['make']}")
                         st.write(f"**Model:** {vehicle['model']}")
+                        st.write(f"**Vehicle Type:** {vehicle_type}")
+                        st.write(f"**Weight:** {vehicle.get('weight', 'N/A')} tonnes")
                     
                     with col2:
                         st.write(f"**License Plate:** {vehicle['license_plate']}")
                         st.write(f"**Status:** {vehicle['status']}")
                         st.write(f"**Mileage:** {vehicle['mileage']:,} miles")
-                        st.write(f"**Purchase Date:** {vehicle['purchase_date']}")
+                        if vehicle.get('defects'):
+                            st.write(f"**Defects:** {vehicle['defects']}")
+                        if vehicle.get('notes'):
+                            st.write(f"**Notes:** {vehicle['notes']}")
                     
                     # Action buttons
                     col1, col2, col3 = st.columns(3)
@@ -112,38 +119,59 @@ def main():
                             col1, col2 = st.columns(2)
                             
                             with col1:
+                                new_whites_id = st.text_input("Whites ID", value=vehicle.get('whites_id', ''))
                                 new_make = st.text_input("Make", value=vehicle['make'])
                                 new_model = st.text_input("Model", value=vehicle['model'])
                                 new_year = st.number_input("Year", min_value=1900, max_value=2030, value=int(vehicle['year']))
-                                new_vin = st.text_input("VIN", value=vehicle['vin'])
+                                new_weight = st.number_input("Weight (tonnes)", min_value=0.1, value=float(vehicle.get('weight', 1.0)), format="%.1f")
+                                
+                                # Vehicle type with custom option
+                                existing_types = ["Digger", "Dumper", "Roller", "Excavator", "Truck", "Van", "Other"]
+                                current_type = vehicle.get('vehicle_type', 'Other')
+                                if current_type not in existing_types:
+                                    existing_types.append(current_type)
+                                
+                                type_option = st.selectbox("Vehicle Type", existing_types + ["Add Custom..."], 
+                                                         index=existing_types.index(current_type) if current_type in existing_types else len(existing_types)-1)
+                                
+                                if type_option == "Add Custom...":
+                                    new_vehicle_type = st.text_input("Custom Vehicle Type")
+                                else:
+                                    new_vehicle_type = type_option
                             
                             with col2:
                                 new_license = st.text_input("License Plate", value=vehicle['license_plate'])
-                                new_status = st.selectbox("Status", ["Active", "Inactive", "Maintenance"], 
-                                                        index=["Active", "Inactive", "Maintenance"].index(vehicle['status']))
+                                new_status = st.selectbox("Status", ["On Hire", "Off Hire", "Maintenance"], 
+                                                        index=["On Hire", "Off Hire", "Maintenance"].index(vehicle['status']) if vehicle['status'] in ["On Hire", "Off Hire", "Maintenance"] else 1)
                                 new_mileage = st.number_input("Mileage", min_value=0, value=int(vehicle['mileage']))
-                                new_purchase_date = st.date_input("Purchase Date", value=pd.to_datetime(vehicle['purchase_date']).date())
+                                new_defects = st.text_area("Defects", value=vehicle.get('defects', ''))
+                                new_notes = st.text_area("Notes", value=vehicle.get('notes', ''))
                             
                             col1, col2 = st.columns(2)
                             with col1:
                                 if st.form_submit_button("Save Changes"):
                                     # Validate inputs
-                                    if not validate_vin(new_vin):
-                                        st.error("Invalid VIN format")
+                                    if not validate_weight(new_weight):
+                                        st.error("Invalid weight - must be a positive number")
                                     elif not validate_year(new_year):
                                         st.error("Invalid year")
+                                    elif not new_vehicle_type:
+                                        st.error("Please select or enter a vehicle type")
                                     else:
                                         # Update vehicle
                                         updated_vehicle = {
                                             'vehicle_id': vehicle['vehicle_id'],
+                                            'whites_id': new_whites_id,
                                             'make': new_make,
                                             'model': new_model,
                                             'year': new_year,
-                                            'vin': new_vin,
+                                            'weight': new_weight,
                                             'license_plate': new_license,
+                                            'vehicle_type': new_vehicle_type,
                                             'status': new_status,
                                             'mileage': new_mileage,
-                                            'purchase_date': new_purchase_date.strftime('%Y-%m-%d')
+                                            'defects': new_defects,
+                                            'notes': new_notes
                                         }
                                         dm.update_vehicle(updated_vehicle)
                                         st.success("Vehicle updated successfully!")
@@ -185,44 +213,65 @@ def main():
             col1, col2 = st.columns(2)
             
             with col1:
-                make = st.text_input("Make *", placeholder="e.g., Ford, Toyota, Chevrolet")
-                model = st.text_input("Model *", placeholder="e.g., F-150, Camry, Silverado")
+                whites_id = st.text_input("Whites ID", placeholder="e.g., W001, W123")
+                make = st.text_input("Make *", placeholder="e.g., Caterpillar, JCB, Volvo")
+                model = st.text_input("Model *", placeholder="e.g., 320D, 3CX, EC220")
                 year = st.number_input("Year *", min_value=1900, max_value=2030, value=datetime.now().year)
-                vin = st.text_input("VIN *", placeholder="17-character VIN")
+                weight = st.number_input("Weight (tonnes) *", min_value=0.1, value=1.0, format="%.1f")
+                
+                # Vehicle type with custom option
+                vehicle_types = ["Digger", "Dumper", "Roller", "Excavator", "Truck", "Van", "Telehandler", "Compactor", "Other"]
+                type_option = st.selectbox("Vehicle Type *", vehicle_types + ["Add Custom..."])
+                
+                if type_option == "Add Custom...":
+                    vehicle_type = st.text_input("Custom Vehicle Type *")
+                else:
+                    vehicle_type = type_option
             
             with col2:
                 license_plate = st.text_input("License Plate *", placeholder="e.g., ABC-1234")
-                status = st.selectbox("Status *", ["Active", "Inactive", "Maintenance"])
+                status = st.selectbox("Status *", ["Off Hire", "On Hire", "Maintenance"])
                 mileage = st.number_input("Current Mileage *", min_value=0, value=0)
-                purchase_date = st.date_input("Purchase Date *", value=date.today())
+                defects = st.text_area("Defects", placeholder="List any known defects or issues...")
+                notes = st.text_area("Notes", placeholder="Additional information about the vehicle...")
             
             if st.form_submit_button("Add Vehicle", type="primary"):
                 # Validate inputs
-                if not all([make, model, year, vin, license_plate]):
+                if not all([make, model, year, weight, license_plate, vehicle_type]):
                     st.error("Please fill in all required fields marked with *")
-                elif not validate_vin(vin):
-                    st.error("Invalid VIN format. VIN must be 17 characters long.")
+                elif not validate_weight(weight):
+                    st.error("Invalid weight. Weight must be a positive number.")
                 elif not validate_year(year):
                     st.error("Invalid year. Year must be between 1900 and 2030.")
                 else:
-                    # Check if VIN already exists
+                    # Check if Whites ID already exists (if provided)
                     vehicles_df = dm.load_vehicles()
-                    if not vehicles_df.empty and vin in vehicles_df['vin'].values:
-                        st.error("A vehicle with this VIN already exists.")
+                    if whites_id and not vehicles_df.empty and 'whites_id' in vehicles_df.columns:
+                        if whites_id in vehicles_df['whites_id'].values:
+                            st.error("A vehicle with this Whites ID already exists.")
+                            continue_process = False
+                        else:
+                            continue_process = True
                     else:
+                        continue_process = True
+                    
+                    if continue_process:
                         # Add vehicle
                         new_vehicle = {
+                            'whites_id': whites_id,
                             'make': make,
                             'model': model,
                             'year': year,
-                            'vin': vin,
+                            'weight': weight,
                             'license_plate': license_plate,
+                            'vehicle_type': vehicle_type,
                             'status': status,
                             'mileage': mileage,
-                            'purchase_date': purchase_date.strftime('%Y-%m-%d')
+                            'defects': defects,
+                            'notes': notes
                         }
                         dm.add_vehicle(new_vehicle)
-                        st.success(f"Vehicle {year} {make} {model} added successfully!")
+                        st.success(f"Vehicle {year} {make} {model} ({vehicle_type}) added successfully!")
                         st.rerun()
     
     with tab3:
@@ -255,7 +304,7 @@ def main():
                     import_df = pd.read_csv(uploaded_file)
                     
                     # Validate required columns
-                    required_columns = ['make', 'model', 'year', 'vin', 'license_plate', 'status', 'mileage', 'purchase_date']
+                    required_columns = ['make', 'model', 'year', 'weight', 'license_plate', 'vehicle_type', 'status', 'mileage']
                     
                     if all(col in import_df.columns for col in required_columns):
                         st.write("Preview of imported data:")

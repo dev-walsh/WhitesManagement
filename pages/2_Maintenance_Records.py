@@ -92,15 +92,15 @@ def main():
             with col2:
                 if not filtered_df.empty:
                     total_cost = filtered_df['cost'].sum()
-                    st.metric("Total Cost", f"${total_cost:,.2f}")
+                    st.metric("Total Cost", f"£{total_cost:,.2f}")
                 else:
-                    st.metric("Total Cost", "$0.00")
+                    st.metric("Total Cost", "£0.00")
             with col3:
                 if not filtered_df.empty:
                     avg_cost = filtered_df['cost'].mean()
-                    st.metric("Average Cost", f"${avg_cost:.2f}")
+                    st.metric("Average Cost", f"£{avg_cost:.2f}")
                 else:
-                    st.metric("Average Cost", "$0.00")
+                    st.metric("Average Cost", "£0.00")
             
             # Display records
             if not filtered_df.empty:
@@ -124,7 +124,7 @@ def main():
                         with col1:
                             st.write(f"**Date:** {record['date']}")
                             st.write(f"**Type:** {record['type']}")
-                            st.write(f"**Cost:** ${record['cost']:.2f}")
+                            st.write(f"**Cost:** £{record['cost']:.2f}")
                             st.write(f"**Mileage:** {record['mileage']:,} miles")
                         
                         with col2:
@@ -167,7 +167,7 @@ def main():
                                                            "Engine Repair", "General Maintenance", "Inspection", "Other"],
                                                           index=["Oil Change", "Tire Rotation", "Brake Service", "Transmission Service", 
                                                                 "Engine Repair", "General Maintenance", "Inspection", "Other"].index(record['type']) if record['type'] in ["Oil Change", "Tire Rotation", "Brake Service", "Transmission Service", "Engine Repair", "General Maintenance", "Inspection", "Other"] else 7)
-                                    new_cost = st.number_input("Cost", min_value=0.0, value=float(record['cost']), format="%.2f")
+                                    new_cost = st.number_input("Cost (£)", min_value=0.0, value=float(record['cost']), format="%.2f")
                                     new_mileage = st.number_input("Mileage", min_value=0, value=int(record['mileage']))
                                 
                                 with col2:
@@ -224,7 +224,7 @@ def main():
                     "Oil Change", "Tire Rotation", "Brake Service", "Transmission Service", 
                     "Engine Repair", "General Maintenance", "Inspection", "Other"
                 ])
-                cost = st.number_input("Cost *", min_value=0.0, value=0.0, format="%.2f")
+                cost = st.number_input("Cost (£) *", min_value=0.0, value=0.0, format="%.2f")
             
             with col2:
                 # Get current mileage for selected vehicle

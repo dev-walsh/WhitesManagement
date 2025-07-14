@@ -50,8 +50,8 @@ def main():
         st.metric("Total Vehicles", total_vehicles)
     
     with col2:
-        active_vehicles = len(vehicles_df[vehicles_df['status'] == 'Active']) if not vehicles_df.empty else 0
-        st.metric("Active Vehicles", active_vehicles)
+        on_hire_vehicles = len(vehicles_df[vehicles_df['status'] == 'On Hire']) if not vehicles_df.empty else 0
+        st.metric("On Hire Vehicles", on_hire_vehicles)
     
     with col3:
         total_equipment = len(equipment_df)
@@ -64,16 +64,16 @@ def main():
     with col5:
         if not maintenance_df.empty:
             total_cost = maintenance_df['cost'].sum()
-            st.metric("Maintenance Cost", f"${total_cost:,.0f}")
+            st.metric("Maintenance Cost", f"£{total_cost:,.0f}")
         else:
-            st.metric("Maintenance Cost", "$0")
+            st.metric("Maintenance Cost", "£0")
     
     with col6:
         if not rentals_df.empty:
             total_revenue = rentals_df['rental_rate'].sum()
-            st.metric("Rental Revenue", f"${total_revenue:,.0f}")
+            st.metric("Rental Revenue", f"£{total_revenue:,.0f}")
         else:
-            st.metric("Rental Revenue", "$0")
+            st.metric("Rental Revenue", "£0")
     
     st.markdown("---")
     

@@ -23,10 +23,12 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Session Management**: Streamlit's built-in caching system for performance optimization
 
 ### Data Storage
-- **Primary Storage**: CSV files (vehicles.csv, maintenance.csv) stored in a local /data directory
+- **Primary Storage**: CSV files (vehicles.csv, maintenance.csv, equipment.csv, rentals.csv) stored in a local /data directory
 - **Data Structure**: 
-  - Vehicles: ID, make, model, year, VIN, license plate, status, mileage, purchase date
-  - Maintenance: ID, vehicle ID, date, type, description, cost, mileage, service provider, next due mileage
+  - Vehicles: ID, Whites ID, make, model, year, weight, license plate, vehicle type, status (On Hire/Off Hire), mileage, defects, notes
+  - Maintenance: ID, vehicle ID, date, type, description, cost (£), mileage, service provider, next due mileage
+  - Equipment: ID, name, category, brand, model, serial number, daily rate (£), weekly rate (£), purchase price (£), status, notes
+  - Rentals: ID, equipment ID, customer details, start/return dates, rental rate (£), deposit (£), status
 - **Data Persistence**: File-based system with automatic directory and file creation
 
 ## Key Components
@@ -63,9 +65,9 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Error Handling**: Graceful handling of missing files and empty data scenarios
 
 ### 7. Validation Layer (utils/validators.py)
-- **Purpose**: Data validation for vehicle information
-- **Features**: VIN validation (17-character format), year validation, license plate validation
-- **Standards**: Follows automotive industry VIN standards
+- **Purpose**: Data validation for vehicle and equipment information
+- **Features**: Weight validation (tonnes), year validation, license plate validation, cost validation
+- **Standards**: Customized for UK business requirements with £ currency
 
 ## Data Flow
 
