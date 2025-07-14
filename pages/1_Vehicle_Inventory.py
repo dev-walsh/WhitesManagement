@@ -23,12 +23,6 @@ def get_data_manager():
 
 def create_sidebar():
     """Create permanent sidebar navigation"""
-    dm = get_data_manager()
-    vehicles_df = dm.load_vehicles()
-    maintenance_df = dm.load_maintenance()
-    equipment_df = dm.load_equipment()
-    rentals_df = dm.load_rentals()
-    
     with st.sidebar:
         st.title("🚗 Whites Management")
         
