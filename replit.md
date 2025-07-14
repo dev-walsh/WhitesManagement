@@ -1,8 +1,8 @@
-# Fleet Management System
+# Whites Management
 
 ## Overview
 
-This is a comprehensive Streamlit-based Fleet Management System designed for complete business operations. The application manages vehicle inventory, maintenance records, and tool/equipment hire operations. All data is stored locally in CSV files, making it fully operational offline without any internet connection required.
+This is a comprehensive Streamlit-based Whites Management system designed for complete business operations. The application manages vehicle inventory, maintenance records, and tool/equipment hire operations. All data is stored locally in CSV files, making it fully operational offline without any internet connection required.
 
 ## User Preferences
 
@@ -142,3 +142,16 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Improved Filtering**: Enhanced filter sections with card-based styling
 - **Visual Feedback**: Better visual cues for different states and actions
 - **Professional Appearance**: Overall more polished and business-ready interface
+
+### System Branding Updates
+- **System Name**: Changed from "Fleet Management System" to "Whites Management"
+- **Permanent Sidebar**: Added permanent sidebar navigation with organized sections across all pages
+- **Consistent Branding**: Updated all titles and references throughout the application
+- **File Export Names**: Updated export filenames to use "whites_data" prefix
+- **Navigation Structure**: Organized sidebar with Fleet Management, Equipment & Rentals, and Analytics & Reports sections
+
+### Navigation & Export Enhancements
+- **Permanent Sidebar**: All pages now have consistent sidebar navigation with disabled state for current page
+- **Export Options**: Added comprehensive export functionality with both CSV and Excel formats
+- **Combined Exports**: All data can be exported as single Excel file or ZIP archive
+- **Professional Layout**: Improved page layout with expanded sidebar by default

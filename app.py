@@ -6,7 +6,7 @@ from utils.data_manager import DataManager
 
 # Configure the page
 st.set_page_config(
-    page_title="Fleet Management System",
+    page_title="Whites Management",
     page_icon="🚗",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -16,6 +16,189 @@ st.set_page_config(
 @st.cache_resource
 def get_data_manager():
     return DataManager()
+
+def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
+    """Create permanent sidebar with organized navigation and export options"""
+    with st.sidebar:
+        st.title("🚗 Whites Management")
+        
+        # Navigation Section
+        st.markdown("### 📍 Navigation")
+        
+        # Fleet Management
+        st.markdown("**Fleet Management**")
+        if st.button("🚗 Vehicle Inventory", use_container_width=True):
+            st.switch_page("pages/1_Vehicle_Inventory.py")
+        if st.button("🔧 Maintenance Records", use_container_width=True):
+            st.switch_page("pages/2_Maintenance_Records.py")
+        
+        # Equipment & Rentals
+        st.markdown("**Equipment & Rentals**")
+        if st.button("⚙️ Equipment Hire", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
+        
+        # Analytics & Reports
+        st.markdown("**Analytics & Reports**")
+        if st.button("📊 Dashboard", use_container_width=True):
+            st.switch_page("pages/3_Dashboard.py")
+        if st.button("📈 Statistics", use_container_width=True):
+            st.switch_page("pages/5_Statistics.py")
+        
+        st.markdown("---")
+        
+        # Export Section
+        st.markdown("### 📥 Export Data")
+        
+        # Create Excel export functions
+        def create_excel_export(dataframes, filename):
+            import io
+            import pandas as pd
+            
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                for sheet_name, df in dataframes.items():
+                    if not df.empty:
+                        df.to_excel(writer, sheet_name=sheet_name, index=False)
+            
+            return output.getvalue()
+        
+        # Individual CSV exports
+        st.markdown("**CSV Format**")
+        
+        if not vehicles_df.empty:
+            csv_vehicles = vehicles_df.to_csv(index=False)
+            st.download_button(
+                label="🚗 Vehicles CSV",
+                data=csv_vehicles,
+                file_name=f"vehicles_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not maintenance_df.empty:
+            csv_maintenance = maintenance_df.to_csv(index=False)
+            st.download_button(
+                label="🔧 Maintenance CSV",
+                data=csv_maintenance,
+                file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not equipment_df.empty:
+            csv_equipment = equipment_df.to_csv(index=False)
+            st.download_button(
+                label="⚙️ Equipment CSV",
+                data=csv_equipment,
+                file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        if not rentals_df.empty:
+            csv_rentals = rentals_df.to_csv(index=False)
+            st.download_button(
+                label="💰 Rentals CSV",
+                data=csv_rentals,
+                file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
+        
+        # Excel exports
+        st.markdown("**Excel Format**")
+        
+        # Individual Excel exports
+        if not vehicles_df.empty:
+            excel_vehicles = create_excel_export({"Vehicles": vehicles_df}, "vehicles.xlsx")
+            st.download_button(
+                label="🚗 Vehicles Excel",
+                data=excel_vehicles,
+                file_name=f"vehicles_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not maintenance_df.empty:
+            excel_maintenance = create_excel_export({"Maintenance": maintenance_df}, "maintenance.xlsx")
+            st.download_button(
+                label="🔧 Maintenance Excel",
+                data=excel_maintenance,
+                file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not equipment_df.empty:
+            excel_equipment = create_excel_export({"Equipment": equipment_df}, "equipment.xlsx")
+            st.download_button(
+                label="⚙️ Equipment Excel",
+                data=excel_equipment,
+                file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        if not rentals_df.empty:
+            excel_rentals = create_excel_export({"Rentals": rentals_df}, "rentals.xlsx")
+            st.download_button(
+                label="💰 Rentals Excel",
+                data=excel_rentals,
+                file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        
+        # Combined exports
+        st.markdown("**Combined Exports**")
+        
+        if not (vehicles_df.empty and maintenance_df.empty and equipment_df.empty and rentals_df.empty):
+            # All data Excel export
+            all_data = {}
+            if not vehicles_df.empty:
+                all_data["Vehicles"] = vehicles_df
+            if not maintenance_df.empty:
+                all_data["Maintenance"] = maintenance_df
+            if not equipment_df.empty:
+                all_data["Equipment"] = equipment_df
+            if not rentals_df.empty:
+                all_data["Rentals"] = rentals_df
+            
+            excel_all = create_excel_export(all_data, "whites_data.xlsx")
+            st.download_button(
+                label="📊 All Data Excel",
+                data=excel_all,
+                file_name=f"whites_data_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+            
+            # ZIP export
+            import zipfile
+            import io
+            
+            zip_buffer = io.BytesIO()
+            with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+                if not vehicles_df.empty:
+                    zip_file.writestr(f"vehicles_{datetime.now().strftime('%Y%m%d')}.csv", vehicles_df.to_csv(index=False))
+                if not maintenance_df.empty:
+                    zip_file.writestr(f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv", maintenance_df.to_csv(index=False))
+                if not equipment_df.empty:
+                    zip_file.writestr(f"equipment_{datetime.now().strftime('%Y%m%d')}.csv", equipment_df.to_csv(index=False))
+                if not rentals_df.empty:
+                    zip_file.writestr(f"rentals_{datetime.now().strftime('%Y%m%d')}.csv", rentals_df.to_csv(index=False))
+            
+            st.download_button(
+                label="📦 All Data ZIP",
+                data=zip_buffer.getvalue(),
+                file_name=f"whites_data_{datetime.now().strftime('%Y%m%d')}.zip",
+                mime="application/zip",
+                use_container_width=True
+            )
+        
+        st.markdown("---")
+        st.markdown("### 💡 System Info")
+        st.info("Offline system using local CSV files. No internet required!")
 
 def main():
     # Custom CSS for improved UI
@@ -81,7 +264,7 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
-    st.markdown('<div class="main-header">🚗 Fleet Management System</div>', unsafe_allow_html=True)
+    st.markdown('<div class="main-header">🚗 Whites Management</div>', unsafe_allow_html=True)
     st.markdown('<div class="sub-header">Complete vehicle, maintenance, and equipment management solution</div>', unsafe_allow_html=True)
     
     # Initialize data manager
@@ -127,19 +310,19 @@ def main():
     
     with col1:
         if st.button("➕ Add New Vehicle", use_container_width=True):
-            st.info("Navigate to 'Vehicle Inventory' page using the sidebar menu")
+            st.switch_page("pages/1_Vehicle_Inventory.py")
     
     with col2:
         if st.button("🔧 Log Maintenance", use_container_width=True):
-            st.info("Navigate to 'Maintenance Records' page using the sidebar menu")
+            st.switch_page("pages/2_Maintenance_Records.py")
     
     with col3:
         if st.button("🔧 Add Equipment", use_container_width=True):
-            st.info("Navigate to 'Tool Hire' page using the sidebar menu")
+            st.switch_page("pages/4_Tool_Hire.py")
     
     with col4:
         if st.button("📊 View Dashboard", use_container_width=True):
-            st.info("Navigate to 'Dashboard' page using the sidebar menu")
+            st.switch_page("pages/3_Dashboard.py")
     
     st.markdown("")
     
@@ -192,60 +375,8 @@ def main():
         else:
             st.info("No rental records found.")
     
-    # Navigation sidebar
-    with st.sidebar:
-        st.title("Navigation")
-        st.markdown("Use the pages in the sidebar to:")
-        st.markdown("- **Vehicle Inventory**: Manage your fleet")
-        st.markdown("- **Maintenance Records**: Track service history")
-        st.markdown("- **Dashboard**: View analytics and reports")
-        st.markdown("- **Tool Hire**: Manage equipment rentals")
-        
-        st.markdown("---")
-        st.markdown("### Data Management")
-        
-        # Export all data
-        if st.button("📥 Export All Data"):
-            # Create a simple CSV export of all data
-            if not vehicles_df.empty:
-                csv_vehicles = vehicles_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Vehicles CSV",
-                    data=csv_vehicles,
-                    file_name=f"vehicles_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv"
-                )
-            
-            if not maintenance_df.empty:
-                csv_maintenance = maintenance_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Maintenance CSV",
-                    data=csv_maintenance,
-                    file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv"
-                )
-            
-            if not equipment_df.empty:
-                csv_equipment = equipment_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Equipment CSV",
-                    data=csv_equipment,
-                    file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv"
-                )
-            
-            if not rentals_df.empty:
-                csv_rentals = rentals_df.to_csv(index=False)
-                st.download_button(
-                    label="Download Rentals CSV",
-                    data=csv_rentals,
-                    file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.csv",
-                    mime="text/csv"
-                )
-        
-        st.markdown("---")
-        st.markdown("### 💡 Offline Mode")
-        st.info("This system works completely offline using local CSV files. No internet connection required!")
+    # Create permanent sidebar navigation
+    create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df)
 
 if __name__ == "__main__":
     main()

@@ -9,12 +9,59 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_manager import DataManager
 from utils.validators import validate_weight, validate_year
 
-st.set_page_config(page_title="Vehicle Inventory", page_icon="🚗", layout="wide")
+st.set_page_config(
+    page_title="Vehicle Inventory", 
+    page_icon="🚗", 
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # Initialize data manager
 @st.cache_resource
 def get_data_manager():
     return DataManager()
+
+def create_sidebar():
+    """Create permanent sidebar navigation"""
+    dm = get_data_manager()
+    vehicles_df = dm.load_vehicles()
+    maintenance_df = dm.load_maintenance()
+    equipment_df = dm.load_equipment()
+    rentals_df = dm.load_rentals()
+    
+    with st.sidebar:
+        st.title("🚗 Whites Management")
+        
+        # Navigation Section
+        st.markdown("### 📍 Navigation")
+        
+        # Fleet Management
+        st.markdown("**Fleet Management**")
+        if st.button("🚗 Vehicle Inventory", use_container_width=True, disabled=True):
+            pass  # Current page
+        if st.button("🔧 Maintenance Records", use_container_width=True):
+            st.switch_page("pages/2_Maintenance_Records.py")
+        
+        # Equipment & Rentals
+        st.markdown("**Equipment & Rentals**")
+        if st.button("⚙️ Equipment Hire", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
+        
+        # Analytics & Reports
+        st.markdown("**Analytics & Reports**")
+        if st.button("📊 Dashboard", use_container_width=True):
+            st.switch_page("pages/3_Dashboard.py")
+        if st.button("📈 Statistics", use_container_width=True):
+            st.switch_page("pages/5_Statistics.py")
+        
+        # Home
+        st.markdown("**Home**")
+        if st.button("🏠 Home", use_container_width=True):
+            st.switch_page("app.py")
+        
+        st.markdown("---")
+        st.markdown("### 💡 System Info")
+        st.info("Offline system using local CSV files. No internet required!")
 
 def main():
     # Custom CSS for better styling
@@ -390,6 +437,9 @@ def main():
                         
                 except Exception as e:
                     st.error(f"Error reading CSV file: {str(e)}")
+    
+    # Create permanent sidebar
+    create_sidebar()
 
 if __name__ == "__main__":
     main()
