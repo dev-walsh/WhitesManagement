@@ -41,7 +41,16 @@ def main():
                 status_filter = st.selectbox("Filter by Status", ["All", "On Hire", "Off Hire", "Maintenance"])
             
             with col3:
-                type_filter = st.selectbox("Filter by Type", ["All"] + sorted(vehicles_df['vehicle_type'].unique().tolist()) if 'vehicle_type' in vehicles_df.columns else ["All"])
+                # Handle vehicle type filter with NaN values
+                if 'vehicle_type' in vehicles_df.columns and not vehicles_df.empty:
+                    unique_types = vehicles_df['vehicle_type'].dropna().unique().tolist()
+                    type_options = ["All"] + sorted([str(t) for t in unique_types])
+                    # Add "Unknown" if there are any NaN values
+                    if vehicles_df['vehicle_type'].isna().any():
+                        type_options.append("Unknown")
+                else:
+                    type_options = ["All"]
+                type_filter = st.selectbox("Filter by Type", type_options)
             
             # Apply filters
             filtered_df = vehicles_df.copy()
@@ -59,7 +68,7 @@ def main():
                 filtered_df = filtered_df[filtered_df['status'] == status_filter]
             
             if type_filter != "All":
-                filtered_df = filtered_df[filtered_df['vehicle_type'] == type_filter]
+                filtered_df = filtered_df[filtered_df['vehicle_type'].fillna('Unknown') == type_filter]
             
             # Display results
             st.write(f"Showing {len(filtered_df)} of {len(vehicles_df)} vehicles")

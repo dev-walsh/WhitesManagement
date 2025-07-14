@@ -1,2 +1,3 @@
-vehicle_id,make,model,year,vin,license_plate,status,mileage,purchase_date
-8832c9b7,test,test,2025,12936475647364756,test,Active,500,2025-07-14
+vehicle_id,make,model,year,vin,license_plate,status,mileage,purchase_date,whites_id,weight,vehicle_type,defects,notes
+8832c9b7,test,test,2025,1.2936475647364756e+16,test,Active,500,2025-07-14,,,,,
+3bba4416,Transit,Van,2025,,Dw09elw,Maintenance,80000,,transit tipper,3.5,Van,Peice of shit,Needs selling quick
