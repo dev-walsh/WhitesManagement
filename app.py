@@ -25,10 +25,12 @@ def main():
     dm = get_data_manager()
     
     # Quick stats overview
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col2, col3, col4, col5 = st.columns(5)
     
     vehicles_df = dm.load_vehicles()
     maintenance_df = dm.load_maintenance()
+    equipment_df = dm.load_equipment()
+    rentals_df = dm.load_rentals()
     
     with col1:
         st.metric("Total Vehicles", len(vehicles_df))
@@ -38,27 +40,26 @@ def main():
         st.metric("Active Vehicles", active_vehicles)
     
     with col3:
-        if not maintenance_df.empty:
-            recent_maintenance = len(maintenance_df[
-                pd.to_datetime(maintenance_df['date']) >= pd.Timestamp.now() - pd.Timedelta(days=30)
-            ])
-        else:
-            recent_maintenance = 0
-        st.metric("Maintenance (Last 30 Days)", recent_maintenance)
+        total_equipment = len(equipment_df)
+        st.metric("Total Equipment", total_equipment)
     
     with col4:
-        if not maintenance_df.empty:
-            total_cost = maintenance_df['cost'].sum()
-            st.metric("Total Maintenance Cost", f"${total_cost:,.2f}")
+        active_rentals = len(rentals_df[rentals_df['status'] == 'Active']) if not rentals_df.empty else 0
+        st.metric("Active Rentals", active_rentals)
+    
+    with col5:
+        if not rentals_df.empty:
+            rental_revenue = rentals_df['rental_rate'].sum()
+            st.metric("Total Rental Revenue", f"${rental_revenue:,.2f}")
         else:
-            st.metric("Total Maintenance Cost", "$0.00")
+            st.metric("Total Rental Revenue", "$0.00")
     
     st.markdown("---")
     
     # Quick actions
     st.subheader("🚀 Quick Actions")
     
-    col1, col2, col3 = st.columns(3)
+    col1, col2, col3, col4 = st.columns(4)
     
     with col1:
         if st.button("➕ Add New Vehicle", use_container_width=True):
@@ -69,22 +70,46 @@ def main():
             st.switch_page("pages/2_Maintenance_Records.py")
     
     with col3:
+        if st.button("🔧 Add Equipment", use_container_width=True):
+            st.switch_page("pages/4_Tool_Hire.py")
+    
+    with col4:
         if st.button("📊 View Dashboard", use_container_width=True):
             st.switch_page("pages/3_Dashboard.py")
     
     st.markdown("---")
     
     # Recent activity
-    st.subheader("📋 Recent Activity")
+    col1, col2 = st.columns(2)
     
-    if not maintenance_df.empty:
-        recent_maintenance = maintenance_df.sort_values('date', ascending=False).head(5)
-        st.dataframe(
-            recent_maintenance[['vehicle_id', 'date', 'type', 'description', 'cost']],
-            use_container_width=True
-        )
-    else:
-        st.info("No maintenance records found. Start by adding vehicles and logging maintenance activities.")
+    with col1:
+        st.subheader("📋 Recent Maintenance")
+        if not maintenance_df.empty:
+            recent_maintenance = maintenance_df.sort_values('date', ascending=False).head(5)
+            st.dataframe(
+                recent_maintenance[['vehicle_id', 'date', 'type', 'cost']],
+                use_container_width=True
+            )
+        else:
+            st.info("No maintenance records found.")
+    
+    with col2:
+        st.subheader("🔧 Recent Rentals")
+        if not rentals_df.empty:
+            recent_rentals = rentals_df.sort_values('start_date', ascending=False).head(5)
+            # Merge with equipment names
+            if not equipment_df.empty:
+                recent_rentals = recent_rentals.merge(
+                    equipment_df[['equipment_id', 'name']], 
+                    on='equipment_id', 
+                    how='left'
+                )
+            st.dataframe(
+                recent_rentals[['customer_name', 'name', 'start_date', 'rental_rate']],
+                use_container_width=True
+            )
+        else:
+            st.info("No rental records found.")
     
     # Navigation sidebar
     with st.sidebar:
@@ -93,6 +118,7 @@ def main():
         st.markdown("- **Vehicle Inventory**: Manage your fleet")
         st.markdown("- **Maintenance Records**: Track service history")
         st.markdown("- **Dashboard**: View analytics and reports")
+        st.markdown("- **Tool Hire**: Manage equipment rentals")
         
         st.markdown("---")
         st.markdown("### Data Management")
@@ -117,6 +143,28 @@ def main():
                     file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.csv",
                     mime="text/csv"
                 )
+            
+            if not equipment_df.empty:
+                csv_equipment = equipment_df.to_csv(index=False)
+                st.download_button(
+                    label="Download Equipment CSV",
+                    data=csv_equipment,
+                    file_name=f"equipment_{datetime.now().strftime('%Y%m%d')}.csv",
+                    mime="text/csv"
+                )
+            
+            if not rentals_df.empty:
+                csv_rentals = rentals_df.to_csv(index=False)
+                st.download_button(
+                    label="Download Rentals CSV",
+                    data=csv_rentals,
+                    file_name=f"rentals_{datetime.now().strftime('%Y%m%d')}.csv",
+                    mime="text/csv"
+                )
+        
+        st.markdown("---")
+        st.markdown("### 💡 Offline Mode")
+        st.info("This system works completely offline using local CSV files. No internet connection required!")
 
 if __name__ == "__main__":
     main()

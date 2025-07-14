@@ -23,51 +23,57 @@ def main():
     dm = get_data_manager()
     vehicles_df = dm.load_vehicles()
     maintenance_df = dm.load_maintenance()
+    equipment_df = dm.load_equipment()
+    rentals_df = dm.load_rentals()
     
-    if vehicles_df.empty:
-        st.warning("No data available. Please add vehicles and maintenance records first.")
-        col1, col2 = st.columns(2)
+    if vehicles_df.empty and equipment_df.empty:
+        st.warning("No data available. Please add vehicles and equipment first.")
+        col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("➕ Add Vehicles"):
                 st.switch_page("pages/1_Vehicle_Inventory.py")
         with col2:
-            if st.button("🔧 Log Maintenance"):
+            if st.button("🔧 Add Equipment"):
+                st.switch_page("pages/4_Tool_Hire.py")
+        with col3:
+            if st.button("📊 Log Maintenance"):
                 st.switch_page("pages/2_Maintenance_Records.py")
         return
     
     # Key Metrics Row
     st.subheader("📈 Key Metrics")
     
-    col1, col2, col3, col4, col5 = st.columns(5)
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
     
     with col1:
         total_vehicles = len(vehicles_df)
         st.metric("Total Vehicles", total_vehicles)
     
     with col2:
-        active_vehicles = len(vehicles_df[vehicles_df['status'] == 'Active'])
+        active_vehicles = len(vehicles_df[vehicles_df['status'] == 'Active']) if not vehicles_df.empty else 0
         st.metric("Active Vehicles", active_vehicles)
     
     with col3:
-        if not maintenance_df.empty:
-            total_cost = maintenance_df['cost'].sum()
-            st.metric("Total Maintenance Cost", f"${total_cost:,.0f}")
-        else:
-            st.metric("Total Maintenance Cost", "$0")
+        total_equipment = len(equipment_df)
+        st.metric("Total Equipment", total_equipment)
     
     with col4:
-        if not maintenance_df.empty:
-            avg_cost = maintenance_df['cost'].mean()
-            st.metric("Avg Maintenance Cost", f"${avg_cost:.0f}")
-        else:
-            st.metric("Avg Maintenance Cost", "$0")
+        active_rentals = len(rentals_df[rentals_df['status'] == 'Active']) if not rentals_df.empty else 0
+        st.metric("Active Rentals", active_rentals)
     
     with col5:
-        if not vehicles_df.empty:
-            avg_mileage = vehicles_df['mileage'].mean()
-            st.metric("Avg Vehicle Mileage", f"{avg_mileage:,.0f}")
+        if not maintenance_df.empty:
+            total_cost = maintenance_df['cost'].sum()
+            st.metric("Maintenance Cost", f"${total_cost:,.0f}")
         else:
-            st.metric("Avg Vehicle Mileage", "0")
+            st.metric("Maintenance Cost", "$0")
+    
+    with col6:
+        if not rentals_df.empty:
+            total_revenue = rentals_df['rental_rate'].sum()
+            st.metric("Rental Revenue", f"${total_revenue:,.0f}")
+        else:
+            st.metric("Rental Revenue", "$0")
     
     st.markdown("---")
     
@@ -224,6 +230,79 @@ def main():
             )
             fig_vehicle_freq.update_layout(yaxis={'categoryorder': 'total ascending'})
             st.plotly_chart(fig_vehicle_freq, use_container_width=True)
+    
+    # Equipment and Rental Analysis
+    if not equipment_df.empty:
+        st.markdown("---")
+        st.subheader("🔧 Equipment & Rental Analysis")
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            # Equipment status distribution
+            equipment_status = equipment_df['status'].value_counts()
+            fig_equipment_status = px.pie(
+                values=equipment_status.values,
+                names=equipment_status.index,
+                title="Equipment Status Distribution"
+            )
+            fig_equipment_status.update_traces(textposition='inside', textinfo='percent+label')
+            st.plotly_chart(fig_equipment_status, use_container_width=True)
+        
+        with col2:
+            # Equipment by category
+            category_counts = equipment_df['category'].value_counts().head(8)
+            fig_categories = px.bar(
+                x=category_counts.values,
+                y=category_counts.index,
+                orientation='h',
+                title="Equipment by Category",
+                labels={'x': 'Number of Items', 'y': 'Category'}
+            )
+            fig_categories.update_layout(yaxis={'categoryorder': 'total ascending'})
+            st.plotly_chart(fig_categories, use_container_width=True)
+        
+        # Rental revenue analysis
+        if not rentals_df.empty:
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                # Monthly rental revenue
+                rentals_copy = rentals_df.copy()
+                rentals_copy['start_date'] = pd.to_datetime(rentals_copy['start_date'])
+                rentals_copy['year_month'] = rentals_copy['start_date'].dt.to_period('M')
+                
+                monthly_revenue = rentals_copy.groupby('year_month')['rental_rate'].sum().reset_index()
+                monthly_revenue['year_month'] = monthly_revenue['year_month'].astype(str)
+                
+                fig_revenue = px.line(
+                    monthly_revenue,
+                    x='year_month',
+                    y='rental_rate',
+                    title="Monthly Rental Revenue",
+                    labels={'rental_rate': 'Revenue ($)', 'year_month': 'Month'}
+                )
+                fig_revenue.update_layout(xaxis_tickangle=-45)
+                st.plotly_chart(fig_revenue, use_container_width=True)
+            
+            with col2:
+                # Top earning equipment
+                equipment_revenue = rentals_df.merge(
+                    equipment_df[['equipment_id', 'name']], 
+                    on='equipment_id', 
+                    how='left'
+                )
+                top_equipment = equipment_revenue.groupby('name')['rental_rate'].sum().sort_values(ascending=False).head(10)
+                
+                fig_top_equipment = px.bar(
+                    x=top_equipment.values,
+                    y=top_equipment.index,
+                    orientation='h',
+                    title="Top 10 Equipment by Revenue",
+                    labels={'x': 'Total Revenue ($)', 'y': 'Equipment'}
+                )
+                fig_top_equipment.update_layout(yaxis={'categoryorder': 'total ascending'})
+                st.plotly_chart(fig_top_equipment, use_container_width=True)
     
     # Recent Activity and Alerts
     st.markdown("---")

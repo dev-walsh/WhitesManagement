@@ -2,11 +2,12 @@
 
 ## Overview
 
-This is a Streamlit-based Fleet Management System designed to track vehicle inventory and maintenance records. The application provides a web interface for managing a fleet of vehicles, logging maintenance activities, and visualizing fleet data through an interactive dashboard.
+This is a comprehensive Streamlit-based Fleet Management System designed for complete business operations. The application manages vehicle inventory, maintenance records, and tool/equipment hire operations. All data is stored locally in CSV files, making it fully operational offline without any internet connection required.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Business requirement: Complete offline operation for business use with tool hire functionality.
 
 ## System Architecture
 
@@ -46,16 +47,22 @@ Preferred communication style: Simple, everyday language.
 - **Dependencies**: Requires existing vehicles before maintenance can be logged
 
 ### 4. Dashboard (pages/3_Dashboard.py)
-- **Purpose**: Data visualization and analytics
+- **Purpose**: Data visualization and analytics for both fleet and equipment
 - **Features**: Key metrics display, interactive charts using Plotly
-- **Analytics**: Fleet status overview, maintenance trends visualization
+- **Analytics**: Fleet status overview, maintenance trends, equipment rental revenue, equipment utilization
 
-### 5. Data Management Layer (utils/data_manager.py)
-- **Purpose**: Centralized data operations and CSV file management
-- **Features**: File creation, data loading/saving, directory management
+### 5. Tool & Equipment Hire (pages/4_Tool_Hire.py)
+- **Purpose**: Complete equipment rental management system
+- **Features**: Equipment inventory, rental processing, customer management, return processing
+- **Business Functions**: Daily/weekly rental rates, security deposits, equipment status tracking, overdue rental alerts
+
+### 6. Data Management Layer (utils/data_manager.py)
+- **Purpose**: Centralized data operations and CSV file management for all business functions
+- **Features**: File creation, data loading/saving, directory management, equipment and rental operations
+- **Data Files**: vehicles.csv, maintenance.csv, equipment.csv, rentals.csv
 - **Error Handling**: Graceful handling of missing files and empty data scenarios
 
-### 6. Validation Layer (utils/validators.py)
+### 7. Validation Layer (utils/validators.py)
 - **Purpose**: Data validation for vehicle information
 - **Features**: VIN validation (17-character format), year validation, license plate validation
 - **Standards**: Follows automotive industry VIN standards
@@ -83,6 +90,7 @@ Preferred communication style: Simple, everyday language.
 ### Data Dependencies
 - Local file system access for CSV storage
 - No external databases or APIs required
+- **Offline Operation**: Complete functionality without internet connection
 
 ## Deployment Strategy
 

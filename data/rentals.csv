@@ -1,0 +1,1 @@
+rental_id,equipment_id,customer_name,customer_phone,customer_email,start_date,expected_return_date,actual_return_date,rental_rate,deposit,additional_charges,status,return_condition,damage_notes,notes

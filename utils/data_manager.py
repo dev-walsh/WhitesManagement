@@ -7,6 +7,8 @@ class DataManager:
     def __init__(self):
         self.vehicles_file = "data/vehicles.csv"
         self.maintenance_file = "data/maintenance.csv"
+        self.equipment_file = "data/equipment.csv"
+        self.rentals_file = "data/rentals.csv"
         self.ensure_data_directory()
         self.ensure_csv_files()
     
@@ -34,6 +36,26 @@ class DataManager:
             ]
             empty_df = pd.DataFrame(columns=maintenance_columns)
             empty_df.to_csv(self.maintenance_file, index=False)
+        
+        # Equipment CSV headers
+        if not os.path.exists(self.equipment_file):
+            equipment_columns = [
+                'equipment_id', 'name', 'category', 'brand', 'model', 'serial_number',
+                'daily_rate', 'weekly_rate', 'purchase_price', 'purchase_date', 
+                'status', 'last_service_date', 'notes'
+            ]
+            empty_df = pd.DataFrame(columns=equipment_columns)
+            empty_df.to_csv(self.equipment_file, index=False)
+        
+        # Rentals CSV headers
+        if not os.path.exists(self.rentals_file):
+            rental_columns = [
+                'rental_id', 'equipment_id', 'customer_name', 'customer_phone', 'customer_email',
+                'start_date', 'expected_return_date', 'actual_return_date', 'rental_rate', 
+                'deposit', 'additional_charges', 'status', 'return_condition', 'damage_notes', 'notes'
+            ]
+            empty_df = pd.DataFrame(columns=rental_columns)
+            empty_df.to_csv(self.rentals_file, index=False)
     
     def load_vehicles(self):
         """Load vehicles from CSV"""
@@ -205,4 +227,181 @@ class DataManager:
             'average_cost': maintenance_df['cost'].mean(),
             'record_count': len(maintenance_df),
             'cost_by_type': maintenance_df.groupby('type')['cost'].sum().to_dict()
+        }
+    
+    # Equipment management methods
+    def load_equipment(self):
+        """Load equipment from CSV"""
+        try:
+            df = pd.read_csv(self.equipment_file)
+            return df
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            return pd.DataFrame(columns=[
+                'equipment_id', 'name', 'category', 'brand', 'model', 'serial_number',
+                'daily_rate', 'weekly_rate', 'purchase_price', 'purchase_date', 
+                'status', 'last_service_date', 'notes'
+            ])
+    
+    def add_equipment(self, equipment_data):
+        """Add a new piece of equipment"""
+        df = self.load_equipment()
+        
+        # Generate unique equipment ID
+        equipment_data['equipment_id'] = str(uuid.uuid4())[:8]
+        
+        # Convert to DataFrame and append
+        new_equipment = pd.DataFrame([equipment_data])
+        df = pd.concat([df, new_equipment], ignore_index=True)
+        
+        # Save to CSV
+        df.to_csv(self.equipment_file, index=False)
+        return equipment_data['equipment_id']
+    
+    def update_equipment(self, updated_equipment):
+        """Update an existing piece of equipment"""
+        df = self.load_equipment()
+        
+        # Find and update the equipment
+        equipment_id = updated_equipment['equipment_id']
+        df.loc[df['equipment_id'] == equipment_id, df.columns] = [updated_equipment[col] for col in df.columns]
+        
+        # Save to CSV
+        df.to_csv(self.equipment_file, index=False)
+    
+    def update_equipment_status(self, equipment_id, new_status):
+        """Update equipment status"""
+        df = self.load_equipment()
+        df.loc[df['equipment_id'] == equipment_id, 'status'] = new_status
+        df.to_csv(self.equipment_file, index=False)
+    
+    def delete_equipment(self, equipment_id):
+        """Delete equipment"""
+        df = self.load_equipment()
+        df = df[df['equipment_id'] != equipment_id]
+        df.to_csv(self.equipment_file, index=False)
+        
+        # Also delete associated rental records
+        rentals_df = self.load_rentals()
+        rentals_df = rentals_df[rentals_df['equipment_id'] != equipment_id]
+        rentals_df.to_csv(self.rentals_file, index=False)
+    
+    def import_equipment(self, import_df):
+        """Import equipment from DataFrame"""
+        existing_df = self.load_equipment()
+        
+        success_count = 0
+        for _, row in import_df.iterrows():
+            try:
+                # Generate unique equipment ID
+                equipment_data = row.to_dict()
+                equipment_data['equipment_id'] = str(uuid.uuid4())[:8]
+                
+                # Add to existing DataFrame
+                new_equipment = pd.DataFrame([equipment_data])
+                existing_df = pd.concat([existing_df, new_equipment], ignore_index=True)
+                success_count += 1
+                
+            except Exception as e:
+                print(f"Error importing equipment: {e}")
+                continue
+        
+        # Save updated DataFrame
+        existing_df.to_csv(self.equipment_file, index=False)
+        return success_count
+    
+    # Rental management methods
+    def load_rentals(self):
+        """Load rentals from CSV"""
+        try:
+            df = pd.read_csv(self.rentals_file)
+            return df
+        except (FileNotFoundError, pd.errors.EmptyDataError):
+            return pd.DataFrame(columns=[
+                'rental_id', 'equipment_id', 'customer_name', 'customer_phone', 'customer_email',
+                'start_date', 'expected_return_date', 'actual_return_date', 'rental_rate', 
+                'deposit', 'additional_charges', 'status', 'return_condition', 'damage_notes', 'notes'
+            ])
+    
+    def add_rental(self, rental_data):
+        """Add a new rental record"""
+        df = self.load_rentals()
+        
+        # Generate unique rental ID
+        rental_data['rental_id'] = str(uuid.uuid4())[:8]
+        
+        # Convert to DataFrame and append
+        new_rental = pd.DataFrame([rental_data])
+        df = pd.concat([df, new_rental], ignore_index=True)
+        
+        # Save to CSV
+        df.to_csv(self.rentals_file, index=False)
+        return rental_data['rental_id']
+    
+    def update_rental(self, updated_rental):
+        """Update an existing rental record"""
+        df = self.load_rentals()
+        
+        # Find and update the rental record
+        rental_id = updated_rental['rental_id']
+        df.loc[df['rental_id'] == rental_id, df.columns] = [updated_rental[col] for col in df.columns]
+        
+        # Save to CSV
+        df.to_csv(self.rentals_file, index=False)
+    
+    def return_rental(self, rental_id, return_data):
+        """Process equipment return"""
+        df = self.load_rentals()
+        
+        # Update rental with return information
+        for key, value in return_data.items():
+            df.loc[df['rental_id'] == rental_id, key] = value
+        
+        # Save to CSV
+        df.to_csv(self.rentals_file, index=False)
+    
+    def import_rentals(self, import_df):
+        """Import rentals from DataFrame"""
+        existing_df = self.load_rentals()
+        
+        success_count = 0
+        for _, row in import_df.iterrows():
+            try:
+                # Generate unique rental ID
+                rental_data = row.to_dict()
+                rental_data['rental_id'] = str(uuid.uuid4())[:8]
+                
+                # Add to existing DataFrame
+                new_rental = pd.DataFrame([rental_data])
+                existing_df = pd.concat([existing_df, new_rental], ignore_index=True)
+                success_count += 1
+                
+            except Exception as e:
+                print(f"Error importing rental: {e}")
+                continue
+        
+        # Save updated DataFrame
+        existing_df.to_csv(self.rentals_file, index=False)
+        return success_count
+    
+    def get_equipment_rental_history(self, equipment_id):
+        """Get rental history for a specific piece of equipment"""
+        rentals_df = self.load_rentals()
+        return rentals_df[rentals_df['equipment_id'] == equipment_id].sort_values('start_date', ascending=False)
+    
+    def get_rental_revenue_summary(self, start_date=None, end_date=None):
+        """Get rental revenue summary for a date range"""
+        rentals_df = self.load_rentals()
+        
+        if start_date and end_date:
+            rentals_df['start_date'] = pd.to_datetime(rentals_df['start_date'])
+            rentals_df = rentals_df[
+                (rentals_df['start_date'] >= pd.to_datetime(start_date)) &
+                (rentals_df['start_date'] <= pd.to_datetime(end_date))
+            ]
+        
+        return {
+            'total_revenue': rentals_df['rental_rate'].sum(),
+            'average_rental': rentals_df['rental_rate'].mean(),
+            'rental_count': len(rentals_df),
+            'revenue_by_equipment': rentals_df.groupby('equipment_id')['rental_rate'].sum().to_dict()
         }
