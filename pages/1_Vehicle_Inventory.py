@@ -53,49 +53,49 @@ def create_horizontal_nav(current_page="Vehicle Inventory"):
                 st.button("🏠 Home", key="nav_home", disabled=True, use_container_width=True)
             else:
                 if st.button("🏠 Home", key="nav_home", use_container_width=True):
-                    st.info("🏠 Please use the sidebar navigation to go to the Home page.")
+                    st.switch_page("app.py")
         
         with col2:
             if current_page == "Vehicle Inventory":
                 st.button("🚗 Vehicles", key="nav_vehicles", disabled=True, use_container_width=True)
             else:
                 if st.button("🚗 Vehicles", key="nav_vehicles", use_container_width=True):
-                    st.info("🚗 Please use the sidebar navigation to go to the Vehicle Inventory page.")
+                    st.switch_page("pages/1_Vehicle_Inventory.py")
         
         with col3:
             if current_page == "Machine Inventory":
                 st.button("🏗️ Machines", key="nav_machines", disabled=True, use_container_width=True)
             else:
                 if st.button("🏗️ Machines", key="nav_machines", use_container_width=True):
-                    st.info("🏗️ Please use the sidebar navigation to go to the Machine Inventory page.")
+                    st.switch_page("pages/6_Machine_Inventory.py")
         
         with col4:
             if current_page == "Tool Hire":
                 st.button("⚙️ Tool Hire", key="nav_tools", disabled=True, use_container_width=True)
             else:
                 if st.button("⚙️ Tool Hire", key="nav_tools", use_container_width=True):
-                    st.info("⚙️ Please use the sidebar navigation to go to the Tool Hire page.")
+                    st.switch_page("pages/4_Tool_Hire.py")
         
         with col5:
             if current_page == "Dashboard":
                 st.button("📊 Dashboard", key="nav_dashboard", disabled=True, use_container_width=True)
             else:
                 if st.button("📊 Dashboard", key="nav_dashboard", use_container_width=True):
-                    st.info("📊 Please use the sidebar navigation to go to the Dashboard page.")
+                    st.switch_page("pages/3_Dashboard.py")
         
         with col6:
             if current_page == "Statistics":
                 st.button("📈 Statistics", key="nav_stats", disabled=True, use_container_width=True)
             else:
                 if st.button("📈 Statistics", key="nav_stats", use_container_width=True):
-                    st.info("📈 Please use the sidebar navigation to go to the Statistics page.")
+                    st.switch_page("pages/5_Statistics.py")
         
         with col7:
             if current_page == "Maintenance":
                 st.button("🔧 Maintenance", key="nav_maintenance", disabled=True, use_container_width=True)
             else:
                 if st.button("🔧 Maintenance", key="nav_maintenance", use_container_width=True):
-                    st.info("🔧 Please use the sidebar navigation to go to the Maintenance Records page.")
+                    st.switch_page("pages/2_Maintenance_Records.py")
         
         st.markdown('</div>', unsafe_allow_html=True)
 
