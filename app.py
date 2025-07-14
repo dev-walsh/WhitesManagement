@@ -76,6 +76,7 @@ def create_horizontal_nav(current_page="Home"):
                 st.button("🏠 Home", key="nav_home", disabled=True, use_container_width=True)
             else:
                 if st.button("🏠 Home", key="nav_home", use_container_width=True):
+                    st.session_state.current_page = 'Home'
                     st.rerun()
         
         with col2:
@@ -83,60 +84,68 @@ def create_horizontal_nav(current_page="Home"):
                 st.button("🚗 Vehicles", key="nav_vehicles", disabled=True, use_container_width=True)
             else:
                 if st.button("🚗 Vehicles", key="nav_vehicles", use_container_width=True):
-                    st.switch_page("pages/1_Vehicle_Inventory.py")
+                    st.session_state.current_page = 'Vehicle_Inventory'
+                    st.rerun()
         
         with col3:
             if current_page == "Machine Inventory":
                 st.button("🏗️ Machines", key="nav_machines", disabled=True, use_container_width=True)
             else:
                 if st.button("🏗️ Machines", key="nav_machines", use_container_width=True):
-                    st.switch_page("pages/6_Machine_Inventory.py")
+                    st.session_state.current_page = 'Machine_Inventory'
+                    st.rerun()
         
         with col4:
             if current_page == "Tool Hire":
                 st.button("⚙️ Tool Hire", key="nav_tools", disabled=True, use_container_width=True)
             else:
                 if st.button("⚙️ Tool Hire", key="nav_tools", use_container_width=True):
-                    st.switch_page("pages/4_Tool_Hire.py")
+                    st.session_state.current_page = 'Tool_Hire'
+                    st.rerun()
         
         with col5:
             if current_page == "Dashboard":
                 st.button("📊 Dashboard", key="nav_dashboard", disabled=True, use_container_width=True)
             else:
                 if st.button("📊 Dashboard", key="nav_dashboard", use_container_width=True):
-                    st.switch_page("pages/3_Dashboard.py")
+                    st.session_state.current_page = 'Dashboard'
+                    st.rerun()
         
         with col6:
             if current_page == "Statistics":
                 st.button("📈 Statistics", key="nav_stats", disabled=True, use_container_width=True)
             else:
                 if st.button("📈 Statistics", key="nav_stats", use_container_width=True):
-                    st.switch_page("pages/5_Statistics.py")
+                    st.session_state.current_page = 'Statistics'
+                    st.rerun()
         
         with col7:
             if current_page == "Maintenance":
                 st.button("🔧 Maintenance", key="nav_maintenance", disabled=True, use_container_width=True)
             else:
                 if st.button("🔧 Maintenance", key="nav_maintenance", use_container_width=True):
-                    st.switch_page("pages/2_Maintenance_Records.py")
+                    st.session_state.current_page = 'Maintenance'
+                    st.rerun()
         
         st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
+    # Initialize session state for navigation
+    if 'current_page' not in st.session_state:
+        st.session_state.current_page = 'Home'
+    
     # Custom CSS for improved UI
     st.markdown("""
     <style>
-    /* Keep sidebar collapsed but functional */
-    section[data-testid="stSidebar"] {
-        width: 0px;
-        min-width: 0px;
-        max-width: 0px;
+    /* Hide sidebar completely */
+    .css-1d391kg, .css-1rs6os, .stSidebar {
+        display: none !important;
     }
-    section[data-testid="stSidebar"] > div {
-        width: 0px;
-        min-width: 0px;
-        max-width: 0px;
-        padding: 0px;
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    .css-1y4p8pa {
+        display: none !important;
     }
     /* Adjust main content area */
     .main .block-container {
@@ -204,6 +213,24 @@ def main():
     </style>
     """, unsafe_allow_html=True)
     
+    # Render page based on session state
+    if st.session_state.current_page == 'Home':
+        render_home_page()
+    elif st.session_state.current_page == 'Vehicle_Inventory':
+        st.info("📝 Vehicle Inventory page - Use the sidebar navigation to access vehicle management features.")
+    elif st.session_state.current_page == 'Machine_Inventory':
+        st.info("🏗️ Machine Inventory page - Use the sidebar navigation to access machine management features.")
+    elif st.session_state.current_page == 'Tool_Hire':
+        st.info("⚙️ Tool Hire page - Use the sidebar navigation to access equipment rental features.")
+    elif st.session_state.current_page == 'Dashboard':
+        st.info("📊 Dashboard page - Use the sidebar navigation to access analytics and reports.")
+    elif st.session_state.current_page == 'Statistics':
+        st.info("📈 Statistics page - Use the sidebar navigation to access detailed statistics.")
+    elif st.session_state.current_page == 'Maintenance':
+        st.info("🔧 Maintenance page - Use the sidebar navigation to access maintenance records.")
+
+def render_home_page():
+    """Render the home page content"""
     # Create horizontal navigation
     create_horizontal_nav("Home")
     
@@ -217,16 +244,16 @@ def main():
     col1, col2, col3, col4, col5 = st.columns(5)
     
     vehicles_df = dm.load_vehicles()
+    machines_df = dm.load_machines()
     maintenance_df = dm.load_maintenance()
     equipment_df = dm.load_equipment()
     rentals_df = dm.load_rentals()
     
     with col1:
-        st.metric("Total Vehicles", len(vehicles_df))
+        st.metric("Road Vehicles", len(vehicles_df))
     
     with col2:
-        on_hire_vehicles = len(vehicles_df[vehicles_df['status'] == 'On Hire']) if not vehicles_df.empty else 0
-        st.metric("On Hire Vehicles", on_hire_vehicles)
+        st.metric("Plant Machines", len(machines_df))
     
     with col3:
         total_equipment = len(equipment_df)
@@ -251,20 +278,24 @@ def main():
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        if st.button("➕ Add New Vehicle", use_container_width=True):
-            st.switch_page("pages/1_Vehicle_Inventory.py")
+        if st.button("🚗 Vehicle Inventory", use_container_width=True):
+            st.session_state.current_page = 'Vehicle_Inventory'
+            st.rerun()
     
     with col2:
-        if st.button("🔧 Log Maintenance", use_container_width=True):
-            st.switch_page("pages/2_Maintenance_Records.py")
+        if st.button("🏗️ Machine Inventory", use_container_width=True):
+            st.session_state.current_page = 'Machine_Inventory'
+            st.rerun()
     
     with col3:
-        if st.button("🔧 Add Equipment", use_container_width=True):
-            st.switch_page("pages/4_Tool_Hire.py")
+        if st.button("⚙️ Tool Hire", use_container_width=True):
+            st.session_state.current_page = 'Tool_Hire'
+            st.rerun()
     
     with col4:
-        if st.button("📊 View Dashboard", use_container_width=True):
-            st.switch_page("pages/3_Dashboard.py")
+        if st.button("📊 Dashboard", use_container_width=True):
+            st.session_state.current_page = 'Dashboard'
+            st.rerun()
     
     st.markdown("")
     
@@ -274,46 +305,36 @@ def main():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### 📋 Recent Maintenance")
+        st.markdown("### 🔧 Recent Maintenance")
         if not maintenance_df.empty:
             recent_maintenance = maintenance_df.sort_values('date', ascending=False).head(5)
-            # Format cost column for display
-            display_maintenance = recent_maintenance[['vehicle_id', 'date', 'type', 'cost']].copy()
-            display_maintenance['cost'] = display_maintenance['cost'].apply(lambda x: f"£{x:,.2f}")
-            st.dataframe(
-                display_maintenance,
-                use_container_width=True,
-                hide_index=True
-            )
+            display_data = []
+            for _, record in recent_maintenance.iterrows():
+                display_data.append({
+                    'Date': record['date'],
+                    'Vehicle/Machine': record['vehicle_id'],
+                    'Type': record['type'],
+                    'Cost': f"£{record['cost']:,.2f}"
+                })
+            if display_data:
+                st.dataframe(display_data, use_container_width=True, hide_index=True)
         else:
             st.info("No maintenance records found.")
     
     with col2:
-        st.markdown("### 🔧 Recent Rentals")
+        st.markdown("### 🏠 Recent Rentals")
         if not rentals_df.empty:
             recent_rentals = rentals_df.sort_values('start_date', ascending=False).head(5)
-            # Merge with equipment names
-            if not equipment_df.empty:
-                recent_rentals = recent_rentals.merge(
-                    equipment_df[['equipment_id', 'name']], 
-                    on='equipment_id', 
-                    how='left'
-                )
-                display_rentals = recent_rentals[['customer_name', 'name', 'start_date', 'rental_rate']].copy()
-                display_rentals['rental_rate'] = display_rentals['rental_rate'].apply(lambda x: f"£{x:,.2f}")
-                st.dataframe(
-                    display_rentals,
-                    use_container_width=True,
-                    hide_index=True
-                )
-            else:
-                display_rentals = recent_rentals[['customer_name', 'start_date', 'rental_rate']].copy()
-                display_rentals['rental_rate'] = display_rentals['rental_rate'].apply(lambda x: f"£{x:,.2f}")
-                st.dataframe(
-                    display_rentals,
-                    use_container_width=True,
-                    hide_index=True
-                )
+            display_data = []
+            for _, rental in recent_rentals.iterrows():
+                display_data.append({
+                    'Date': rental['start_date'],
+                    'Customer': rental['customer_name'],
+                    'Equipment': rental['equipment_id'],
+                    'Rate': f"£{rental['rental_rate']:,.2f}"
+                })
+            if display_data:
+                st.dataframe(display_data, use_container_width=True, hide_index=True)
         else:
             st.info("No rental records found.")
 
