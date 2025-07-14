@@ -1,6 +1,6 @@
-# Fleet Management System - Windows Offline Setup
+# Whites Management - Windows Offline Setup
 
-This guide will help you set up and run the Fleet Management System on your Windows machine completely offline.
+This guide will help you set up and run the Whites Management system on your Windows machine completely offline.
 
 ## System Requirements
 
@@ -29,11 +29,11 @@ This guide will help you set up and run the Fleet Management System on your Wind
    - Type: `python --version`
    - You should see: `Python 3.11.x`
 
-### Step 2: Download the Fleet Management System
+### Step 2: Download the Whites Management System
 
 1. **Create a folder** for the application:
    ```
-   C:\FleetManagement\
+   C:\WhitesManagement\
    ```
 
 2. **Copy all files** from this project to the folder:
@@ -57,24 +57,12 @@ This guide will help you set up and run the Fleet Management System on your Wind
 
 **Manual Method** (if needed):
 1. Open Command Prompt as Administrator
-2. Navigate to your folder: `cd C:\FleetManagement`
+2. Navigate to your folder: `cd C:\WhitesManagement`
 3. Install packages: `pip install -r offline_requirements.txt`
 
 ### Step 4: Create Startup Script
 
-Create a file called `start_app.bat` in your FleetManagement folder:
-
-```batch
-@echo off
-echo Starting Fleet Management System...
-echo.
-echo The application will open in your web browser.
-echo To stop the application, close this window or press Ctrl+C
-echo.
-cd /d "%~dp0"
-python -m streamlit run app.py --server.port 8501 --server.address localhost
-pause
-```
+The `start_app.bat` file is already included and configured for optimal performance.
 
 ## Running the Application
 
@@ -85,7 +73,7 @@ pause
 
 ### Method 2: Using Command Line
 1. Open Command Prompt
-2. Navigate to: `cd C:\FleetManagement`
+2. Navigate to: `cd C:\WhitesManagement`
 3. Run: `streamlit run app.py`
 4. Open browser to: http://localhost:8501
 
@@ -93,7 +81,8 @@ pause
 
 - All your data is stored in CSV files in the `data\` folder
 - Files created automatically:
-  - `vehicles.csv` - Vehicle inventory
+  - `vehicles.csv` - Road vehicle inventory
+  - `machines.csv` - Plant machine inventory  
   - `maintenance.csv` - Maintenance records
   - `equipment.csv` - Equipment inventory
   - `rentals.csv` - Rental records
@@ -109,15 +98,7 @@ pause
 
 ### Automated Backup (Optional):
 Create `backup_data.bat`:
-```batch
-@echo off
-set backup_folder=C:\FleetManagement_Backups
-set date_stamp=%date:~-4,4%%date:~-10,2%%date:~-7,2%
-mkdir "%backup_folder%\%date_stamp%" 2>nul
-xcopy "C:\FleetManagement\data" "%backup_folder%\%date_stamp%\" /E /Y
-echo Backup completed to %backup_folder%\%date_stamp%
-pause
-```
+Run the included `backup_data.bat` file, or create your own backup routine.
 
 ## Troubleshooting
 
@@ -140,11 +121,13 @@ pause
 
 ## Features Available Offline
 
-✅ **Complete Vehicle Management**
-- Add, edit, delete vehicles
-- Track vehicle status (On Hire/Off Hire)
-- Mileage tracking
-- Custom vehicle types
+✅ **Complete Fleet Management**
+- Road vehicle inventory with mileage tracking
+- Plant machine inventory with operating hours
+- Vehicle status tracking (On Hire/Off Hire)
+- Machine status tracking (Active/Inactive/Under Maintenance)
+- Custom vehicle and machine types
+- VIN/chassis number tracking
 - Defects and notes
 
 ✅ **Maintenance Tracking**
@@ -190,23 +173,29 @@ If you encounter issues:
 
 Your final folder should look like:
 ```
-C:\FleetManagement\
+C:\WhitesManagement\
 ├── app.py
 ├── start_app.bat
-├── requirements.txt
+├── start_app_simple.bat
+├── install_packages.bat
+├── check_system.bat
+├── backup_data.bat
+├── offline_requirements.txt
 ├── WINDOWS_SETUP.md
+├── TROUBLESHOOTING.md
 ├── pages\
 │   ├── 1_Vehicle_Inventory.py
 │   ├── 2_Maintenance_Records.py
 │   ├── 3_Dashboard.py
-│   └── 4_Tool_Hire.py
+│   ├── 4_Tool_Hire.py
+│   ├── 5_Statistics.py
+│   └── 6_Machine_Inventory.py
 ├── utils\
 │   ├── data_manager.py
 │   └── validators.py
-├── .streamlit\
-│   └── config.toml
 └── data\
     ├── vehicles.csv
+    ├── machines.csv
     ├── maintenance.csv
     ├── equipment.csv
     └── rentals.csv

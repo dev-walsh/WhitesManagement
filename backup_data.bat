@@ -1,11 +1,11 @@
 @echo off
 echo ===================================================
-echo    Fleet Management System - Data Backup
+echo    Whites Management - Data Backup
 echo ===================================================
 echo.
 
 REM Set backup location
-set backup_folder=C:\FleetManagement_Backups
+set backup_folder=C:\WhitesManagement_Backups
 
 REM Create date stamp (YYYYMMDD format)
 for /f "tokens=2 delims==" %%a in ('wmic OS Get localdatetime /value') do set "dt=%%a"
@@ -19,7 +19,7 @@ mkdir "%backup_path%" 2>nul
 REM Check if data folder exists
 if not exist "data\" (
     echo ERROR: No data folder found!
-    echo Make sure you're running this from the FleetManagement directory.
+    echo Make sure you're running this from the WhitesManagement directory.
     pause
     exit /b 1
 )

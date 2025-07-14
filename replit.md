@@ -178,3 +178,22 @@ Business requirement: Complete offline operation for business use with tool hire
 - **Export Options**: Added comprehensive export functionality with both CSV and Excel formats
 - **Combined Exports**: All data can be exported as single Excel file or ZIP archive
 - **Professional Layout**: Improved page layout with expanded sidebar by default
+
+### Windows Offline Deployment (July 14, 2025)
+- **Complete Offline Package**: Created comprehensive Windows deployment system
+- **Installation Automation**: 
+  - `install_packages.bat` - Automated dependency installation
+  - `check_system.bat` - System verification utility
+  - `start_app.bat` - Application launcher
+  - `backup_data.bat` - Data backup utility
+- **Updated Dependencies**: All package versions updated to latest stable versions
+- **Streamlit Configuration**: Optimized `.streamlit/config.toml` for offline operation
+- **Documentation Suite**:
+  - `README_WINDOWS.md` - Quick start guide for business users
+  - `DEPLOYMENT_GUIDE.md` - Technical deployment documentation
+  - `WINDOWS_SETUP.md` - Detailed setup instructions
+  - `TROUBLESHOOTING.md` - Error resolution guide
+- **Navigation Reordering**: Updated sidebar navigation to user's preferred order:
+  - Vehicle Inventory → Machine Inventory → Tool Hire → Dashboard → Statistics → Maintenance Records
+- **Business Customization**: Complete UK business terminology and £ currency throughout
+- **Production Ready**: Fully configured for offline Windows business deployment

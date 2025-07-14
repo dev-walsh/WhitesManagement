@@ -20,16 +20,16 @@ if %errorlevel% neq 0 (
 
 REM Install packages
 echo Installing Streamlit...
-pip install "streamlit>=1.28.0"
+pip install "streamlit>=1.46.1"
 
 echo Installing Pandas...
-pip install "pandas>=1.3.0"
+pip install "pandas>=2.3.1"
 
 echo Installing Plotly...
-pip install "plotly>=5.0.0"
+pip install "plotly>=6.2.0"
 
 echo Installing XlsxWriter...
-pip install "xlsxwriter>=3.0.0"
+pip install "xlsxwriter>=3.2.5"
 
 echo.
 echo ===================================================
