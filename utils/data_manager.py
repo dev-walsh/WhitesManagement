@@ -136,7 +136,12 @@ class DataManager:
         
         # Find and update the vehicle
         vehicle_id = updated_vehicle['vehicle_id']
-        df.loc[df['vehicle_id'] == vehicle_id, df.columns] = [updated_vehicle[col] for col in df.columns]
+        mask = df['vehicle_id'] == vehicle_id
+        
+        # Update only the columns that exist in the updated_vehicle dictionary
+        for col in df.columns:
+            if col in updated_vehicle:
+                df.loc[mask, col] = updated_vehicle[col]
         
         # Save to CSV
         df.to_csv(self.vehicles_file, index=False)
@@ -147,7 +152,12 @@ class DataManager:
         
         # Find and update the machine
         machine_id = updated_machine['machine_id']
-        df.loc[df['machine_id'] == machine_id, df.columns] = [updated_machine[col] for col in df.columns]
+        mask = df['machine_id'] == machine_id
+        
+        # Update only the columns that exist in the updated_machine dictionary
+        for col in df.columns:
+            if col in updated_machine:
+                df.loc[mask, col] = updated_machine[col]
         
         # Save to CSV
         df.to_csv(self.machines_file, index=False)
