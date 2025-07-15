@@ -1,1 +1,4 @@
-machine_id,whites_id,vin_chassis,make,model,year,weight,machine_type,status,hours,defects,notes
+machine_id,whites_id,vin_chassis,make,model,year,weight,machine_type,daily_rate,weekly_rate,status,hours,defects,notes
+d3f25a02,WM001,CAT320DL2345678,Caterpillar,320D,2017,20.5,Excavator,450.0,2700.0,Active,3450,,"Excellent condition, recently serviced"
+b55b0eed,WM002,JCB531-70345678,JCB,531-70,2019,4.2,Telehandler,280.0,1680.0,Active,2150,Minor hydraulic leak,"Popular machine, high demand"
+cbd0f636,WM003,VOL210G2345678,Volvo,L110G,2020,15.8,Loader,380.0,2280.0,Under Maintenance,1890,Engine service required,Scheduled for major service

@@ -1,1 +1,3 @@
 maintenance_id,vehicle_id,date,type,description,cost,mileage,service_provider,next_due_mileage
+ed612975,9fe775ac,2024-06-15,Service,Annual service and MOT,450.0,43000,Ford Main Dealer,48000
+482c93ec,4f0c7af4,2024-07-01,Routine,Oil change and filter replacement,120.0,31500,Local Garage,36500

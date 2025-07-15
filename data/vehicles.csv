@@ -1,1 +1,4 @@
-vehicle_id,make,model,year,vin,license_plate,status,mileage,purchase_date,whites_id,weight,vehicle_type,defects,notes
+vehicle_id,whites_id,vin_chassis,make,model,year,weight,license_plate,vehicle_type,status,mileage,defects,notes
+9fe775ac,WH001,JM1GJ1W57H1234567,Ford,Transit,2019,3.5,BT19 ABC,Van,On Hire,45000,Minor paint scratches on rear door,Regular service due in 2000 miles
+4f0c7af4,WH002,WVWZZZ9NZHE123456,Volkswagen,Crafter,2020,4.2,BT20 DEF,Van,Off Hire,32000,,"Recently serviced, excellent condition"
+d8589340,WH003,SALGS2VF5HA123456,Land Rover,Defender,2018,2.8,BT18 GHI,Truck,Maintenance,78000,Brake pads need replacement,In workshop for brake service
