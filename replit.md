@@ -197,3 +197,19 @@ Business requirement: Complete offline operation for business use with tool hire
   - Vehicle Inventory → Machine Inventory → Tool Hire → Dashboard → Statistics → Maintenance Records
 - **Business Customization**: Complete UK business terminology and £ currency throughout
 - **Production Ready**: Fully configured for offline Windows business deployment
+
+### AWS EC2 Cloud Deployment (July 15, 2025)
+- **Complete EC2 Deployment Package**: Created production-ready AWS deployment system
+- **Automated Setup Script**: `ec2_setup_script.sh` for one-command installation on Ubuntu EC2
+- **Comprehensive Documentation**: `AWS_EC2_DEPLOYMENT.md` with step-by-step EC2 setup guide
+- **Production Configuration**:
+  - Nginx reverse proxy with SSL support
+  - Systemd service for automatic startup
+  - UFW firewall configuration
+  - Automated daily backups with retention
+  - User isolation and security hardening
+- **Cost Optimization**: Detailed cost estimates for different EC2 instance types
+- **Domain Support**: Complete DNS and SSL certificate setup instructions
+- **Monitoring Tools**: Built-in logging, resource monitoring, and troubleshooting guides
+- **File Watcher Fix**: Resolved threading exceptions by switching to polling-based file monitoring
+- **Deployment Package**: `whites-management-ec2.tar.gz` with all necessary files and scripts
