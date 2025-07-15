@@ -1,3 +1,1 @@
 equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes
-65963d43,Portable Generator 10kVA,Power Generation,Honda,EU10i,HND-10KVA-001,45.0,270.0,2500.0,2023-01-15,Available,2024-06-01,"Quiet operation, fuel efficient"
-c64b114f,Concrete Mixer 250L,Construction,Belle,Minimix 150,BEL-250L-002,35.0,210.0,1200.0,2022-08-20,Available,2024-05-15,"Petrol engine, easy start"

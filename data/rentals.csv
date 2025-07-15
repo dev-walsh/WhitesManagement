@@ -1,2 +1,1 @@
 rental_id,equipment_id,customer_name,customer_phone,customer_email,start_date,expected_return_date,actual_return_date,rental_rate,deposit,additional_charges,status,return_condition,damage_notes,notes
-0d2ba28e,65963d43,ABC Construction Ltd,01234 567890,orders@abcconstruction.co.uk,2024-07-10,2024-07-17,,270.0,500.0,0.0,Active,,,Weekly hire for site power
