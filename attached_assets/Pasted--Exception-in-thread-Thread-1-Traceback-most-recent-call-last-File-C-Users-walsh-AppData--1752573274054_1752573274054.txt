@@ -1,0 +1,29 @@
+
+Exception in thread Thread-1:
+Traceback (most recent call last):
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\threading.py", line 1038, in _bootstrap_inner
+    self.run()
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\watchdog\observers\api.py", line 213, in run
+    self.dispatch_events(self.event_queue)
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\watchdog\observers\api.py", line 391, in dispatch_events
+    handler.dispatch(event)
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\watchdog\events.py", line 217, in dispatch
+    getattr(self, f"on_{event.event_type}")(event)
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\event_based_path_watcher.py", line 419, in on_created
+    self.handle_path_change_event(event)
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\event_based_path_watcher.py", line 405, in handle_path_change_event
+    new_md5 = util.calc_md5_with_blocking_retries(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\util.py", line 66, in calc_md5_with_blocking_retries
+    content = _do_with_retries(
+              ^^^^^^^^^^^^^^^^^
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\util.py", line 175, in _do_with_retries
+    return orig_fn()
+           ^^^^^^^^^
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\util.py", line 67, in <lambda>
+    lambda: _get_file_content(path),
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\walsh\AppData\Local\Programs\Python\Python311\Lib\site-packages\streamlit\watcher\util.py", line 102, in _get_file_content
+    with open(file_path, "rb") as f:
+         ^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\walsh\\Desktop\\VehicleTracker\\utils\\__pycache__\\validators.cpython-311.pyc.2313886166320'
