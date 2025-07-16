@@ -311,6 +311,15 @@ def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
         st.markdown('</div>', unsafe_allow_html=True)
 
 def main():
+    """Main application entry point"""
+    # Set page configuration
+    st.set_page_config(
+        page_title="Whites Management System",
+        page_icon="🚗",
+        layout="wide",
+        initial_sidebar_state="expanded"
+    )
+    
     # Check authentication first
     if not check_password():
         st.stop()

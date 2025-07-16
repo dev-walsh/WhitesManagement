@@ -42,9 +42,35 @@ def check_password():
     st.markdown("""
     <style>
     .stApp {
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        color: #e0e6ed;
-        min-height: 100vh;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+        color: #e0e6ed !important;
+        min-height: 100vh !important;
+    }
+    
+    /* Hide default Streamlit elements that might create empty containers */
+    .stApp > header {
+        display: none !important;
+    }
+    
+    /* Hide any empty containers at the top */
+    .stApp > div:empty {
+        display: none !important;
+    }
+    
+    /* Hide default Streamlit containers */
+    .stApp > div:first-child:empty {
+        display: none !important;
+    }
+    
+    /* Hide any potential empty sidebar containers */
+    .stSidebar > div:empty {
+        display: none !important;
+    }
+    
+    /* Remove any default padding/margins that might create empty space */
+    .stApp > div:first-child {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
     }
     
     .login-container {
