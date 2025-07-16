@@ -148,5 +148,5 @@ The architecture prioritizes simplicity and ease of deployment while maintaining
 - **Data Relationships**: Maintenance linked to vehicles, rentals linked to equipment
 - **Custom Categories**: Working in both add and edit forms
 - **Export Functions**: All export buttons styled consistently and working
-- **Login System**: Active with admin/admin credentials and 24-hour session timeout
+- **Login System**: Active with whitesadmin/WhitesFleet2025! credentials and 24-hour session timeout
 - **Deployment Ready**: System fully tested and prepared for production use

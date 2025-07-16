@@ -15,8 +15,8 @@ def check_password():
         username = st.session_state["username"]
         password = st.session_state["password"]
         
-        # Default credentials: admin/admin
-        if username == "admin" and password == "admin":
+        # Production credentials: whitesadmin/WhitesFleet2025!
+        if username == "whitesadmin" and password == "WhitesFleet2025!":
             st.session_state["password_correct"] = True
             st.session_state["current_user"] = username
             st.session_state["login_time"] = datetime.now()
@@ -227,10 +227,10 @@ def check_password():
     
     st.markdown("""
     <div class="login-footer">
-        <p><strong>Default Credentials:</strong></p>
-        <p>Username: <code>admin</code></p>
-        <p>Password: <code>admin</code></p>
-        <p><em>Change these credentials in production</em></p>
+        <p><strong>Production Credentials:</strong></p>
+        <p>Username: <code>whitesadmin</code></p>
+        <p>Password: <code>WhitesFleet2025!</code></p>
+        <p><em>Secure credentials for production deployment</em></p>
     </div>
     """, unsafe_allow_html=True)
     

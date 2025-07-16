@@ -66,9 +66,9 @@
 
 ### Environment Settings
 ```bash
-# Login credentials (change in production)
-Username: admin
-Password: admin
+# Production login credentials
+Username: whitesadmin
+Password: WhitesFleet2025!
 Session timeout: 24 hours
 ```
 
