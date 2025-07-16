@@ -1,1 +1,3 @@
-vehicle_id,whites_id,vin_chassis,make,model,year,weight,license_plate,vehicle_type,status,mileage,defects,notes
+vehicle_id,whites_id,vin_chassis,make,model,year,weight,license_plate,vehicle_type,status,mileage,defects,notes,fuel_type
+9f1d6033,W001,VIN123456789,Toyota,Hilux,2020,2.5,ABC123,Van,Active,20000,Minor door scratch,Updated mileage and status,Diesel
+7bd57696,W002,VIN987654321,Ford,Transit,2019,3.2,XYZ789,Commercial Van,Maintenance,25000,Engine warning light,Scheduled for service,Diesel
