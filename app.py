@@ -67,6 +67,51 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
     
     # Footer with quick actions and export options
     st.markdown("---")
+    
+    # Custom CSS for blue export buttons
+    st.markdown("""
+    <style>
+    .stDownloadButton > button {
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        width: 100%;
+    }
+    .stDownloadButton > button:hover {
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
+        transform: translateY(-2px);
+    }
+    .stDownloadButton > button:active {
+        transform: translateY(0px);
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+    }
+    
+    /* Style disabled buttons in export section */
+    .stButton > button[disabled] {
+        background: linear-gradient(135deg, #666666 0%, #555555 100%);
+        color: #cccccc;
+        border: none;
+        border-radius: 8px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        width: 100%;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+    
+    .stButton > button[disabled]:hover {
+        background: linear-gradient(135deg, #666666 0%, #555555 100%);
+        transform: none;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     col1, col2, col3 = st.columns(3)
     
     with col1:
