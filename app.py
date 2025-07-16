@@ -269,7 +269,10 @@ def show_vehicle_inventory_content(vehicles_df):
             with col2:
                 whites_id = st.text_input("Whites ID", placeholder="W001")
                 vin_chassis = st.text_input("VIN/Chassis", placeholder="VIN123456789")
-                vehicle_type = st.selectbox("Vehicle Type", ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"])
+                vehicle_type_options = ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other", "Custom"]
+                vehicle_type = st.selectbox("Vehicle Type", vehicle_type_options)
+                if vehicle_type == "Custom":
+                    vehicle_type = st.text_input("Custom Vehicle Type", placeholder="Enter custom vehicle type")
                 mileage = st.number_input("Mileage*", min_value=0, value=0)
                 weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=1.5, format="%.1f")
             
@@ -373,8 +376,16 @@ def show_vehicle_inventory_content(vehicles_df):
                     with col2:
                         whites_id = st.text_input("Whites ID", value=selected_vehicle_data.get('whites_id', '') if pd.notna(selected_vehicle_data.get('whites_id')) else '')
                         vin_chassis = st.text_input("VIN/Chassis", value=selected_vehicle_data.get('vin_chassis', '') if pd.notna(selected_vehicle_data.get('vin_chassis')) else '')
-                        vehicle_type = st.selectbox("Vehicle Type", ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"], 
-                                                   index=["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"].index(selected_vehicle_data.get('vehicle_type', 'Car')) if pd.notna(selected_vehicle_data.get('vehicle_type')) else 0)
+                        vehicle_type_options = ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other", "Custom"]
+                        selected_vehicle_type = selected_vehicle_data.get('vehicle_type', 'Car')
+                        if selected_vehicle_type not in vehicle_type_options[:-1]:  # Exclude 'Custom' from check
+                            # If it's a custom vehicle type, set to Custom and show text input
+                            vehicle_type = st.selectbox("Vehicle Type", vehicle_type_options, index=vehicle_type_options.index('Custom'))
+                            vehicle_type = st.text_input("Custom Vehicle Type", value=selected_vehicle_type)
+                        else:
+                            vehicle_type = st.selectbox("Vehicle Type", vehicle_type_options, index=vehicle_type_options.index(selected_vehicle_type) if pd.notna(selected_vehicle_type) else 0)
+                            if vehicle_type == "Custom":
+                                vehicle_type = st.text_input("Custom Vehicle Type", placeholder="Enter custom vehicle type")
                         mileage = st.number_input("Mileage*", min_value=0, value=int(selected_vehicle_data.get('mileage', 0)))
                         weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=float(selected_vehicle_data.get('weight', 1.5)), format="%.1f")
                     
@@ -635,10 +646,14 @@ def show_tool_hire_content(equipment_df, rentals_df):
             col1, col2, col3 = st.columns(3)
             with col1:
                 name = st.text_input("Equipment Name*", placeholder="Excavator")
-                category = st.selectbox("Category*", [
+                category_options = [
                     "Construction", "Excavation", "Lifting", "Cutting", "Drilling", 
-                    "Measuring", "Safety", "Power Tools", "Access Equipment", "Other"
-                ])
+                    "Measuring", "Safety", "Power Tools", "Access Equipment", "Other", "Custom"
+                ]
+                category = st.selectbox("Category*", category_options)
+                if category == "Custom":
+                    category = st.text_input("Custom Category*", placeholder="Enter custom category")
+                whites_id = st.text_input("Whites ID", placeholder="E001")
                 brand = st.text_input("Brand", placeholder="Caterpillar")
                 model = st.text_input("Model", placeholder="320D")
                 serial_number = st.text_input("Serial Number", placeholder="SN123456")
@@ -662,6 +677,7 @@ def show_tool_hire_content(equipment_df, rentals_df):
                         'category': category,
                         'daily_rate': daily_rate,
                         'status': status,
+                        'whites_id': whites_id if whites_id else None,
                         'brand': brand if brand else None,
                         'model': model if model else None,
                         'serial_number': serial_number if serial_number else None,
@@ -748,11 +764,17 @@ def show_tool_hire_content(equipment_df, rentals_df):
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     name = st.text_input("Equipment Name*", value=selected_equipment_data.get('name', ''))
-                    category_options = ["Construction", "Excavation", "Lifting", "Cutting", "Drilling", "Measuring", "Safety", "Power Tools", "Access Equipment", "Other"]
+                    category_options = ["Construction", "Excavation", "Lifting", "Cutting", "Drilling", "Measuring", "Safety", "Power Tools", "Access Equipment", "Other", "Custom"]
                     selected_category = selected_equipment_data.get('category', 'Other')
-                    if selected_category not in category_options:
-                        selected_category = 'Other'
-                    category = st.selectbox("Category*", category_options, index=category_options.index(selected_category))
+                    if selected_category not in category_options[:-1]:  # Exclude 'Custom' from check
+                        # If it's a custom category, set to Custom and show text input
+                        category = st.selectbox("Category*", category_options, index=category_options.index('Custom'))
+                        category = st.text_input("Custom Category*", value=selected_category)
+                    else:
+                        category = st.selectbox("Category*", category_options, index=category_options.index(selected_category))
+                        if category == "Custom":
+                            category = st.text_input("Custom Category*", placeholder="Enter custom category")
+                    whites_id = st.text_input("Whites ID", value=selected_equipment_data.get('whites_id', '') if pd.notna(selected_equipment_data.get('whites_id')) else '')
                     brand = st.text_input("Brand", value=selected_equipment_data.get('brand', '') if pd.notna(selected_equipment_data.get('brand')) else '')
                     model = st.text_input("Model", value=selected_equipment_data.get('model', '') if pd.notna(selected_equipment_data.get('model')) else '')
                     serial_number = st.text_input("Serial Number", value=selected_equipment_data.get('serial_number', '') if pd.notna(selected_equipment_data.get('serial_number')) else '')
@@ -797,6 +819,7 @@ def show_tool_hire_content(equipment_df, rentals_df):
                         updated_equipment['category'] = category
                         updated_equipment['daily_rate'] = daily_rate
                         updated_equipment['status'] = status
+                        updated_equipment['whites_id'] = whites_id if whites_id else None
                         updated_equipment['brand'] = brand if brand else None
                         updated_equipment['model'] = model if model else None
                         updated_equipment['serial_number'] = serial_number if serial_number else None

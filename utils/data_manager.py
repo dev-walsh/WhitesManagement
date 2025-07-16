@@ -50,9 +50,9 @@ class DataManager:
         # Equipment CSV headers
         if not os.path.exists(self.equipment_file):
             equipment_columns = [
-                'equipment_id', 'name', 'category', 'brand', 'model', 'serial_number',
-                'daily_rate', 'weekly_rate', 'purchase_price', 'purchase_date', 
-                'status', 'last_service_date', 'notes'
+                'equipment_id', 'name', 'category', 'daily_rate', 'status', 'whites_id', 'brand', 'model', 
+                'serial_number', 'weekly_rate', 'purchase_price', 'purchase_date', 
+                'last_service_date', 'description', 'notes'
             ]
             empty_df = pd.DataFrame(columns=equipment_columns)
             empty_df.to_csv(self.equipment_file, index=False)
@@ -311,9 +311,9 @@ class DataManager:
             return df
         except (FileNotFoundError, pd.errors.EmptyDataError):
             return pd.DataFrame(columns=[
-                'equipment_id', 'name', 'category', 'brand', 'model', 'serial_number',
-                'daily_rate', 'weekly_rate', 'purchase_price', 'purchase_date', 
-                'status', 'last_service_date', 'notes'
+                'equipment_id', 'name', 'category', 'daily_rate', 'status', 'whites_id', 'brand', 'model', 
+                'serial_number', 'weekly_rate', 'purchase_price', 'purchase_date', 
+                'last_service_date', 'description', 'notes'
             ])
     
     def add_equipment(self, equipment_data):

@@ -1,1 +1,1 @@
-equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes
+equipment_id,name,category,daily_rate,status,whites_id,brand,model,serial_number,weekly_rate,purchase_price,purchase_date,last_service_date,description,notes
