@@ -263,7 +263,50 @@ def show_vehicle_inventory_content(vehicles_df):
     # Display vehicles
     if not vehicles_df.empty:
         st.markdown("### Current Vehicles")
-        st.dataframe(vehicles_df, use_container_width=True, hide_index=True)
+        
+        # Create a cleaner display with only essential columns
+        display_vehicles = vehicles_df.copy()
+        
+        # Select and rename columns for better readability
+        display_columns = {
+            'make': 'Make',
+            'model': 'Model', 
+            'year': 'Year',
+            'license_plate': 'License Plate',
+            'fuel_type': 'Fuel Type',
+            'status': 'Status',
+            'mileage': 'Mileage',
+            'weight': 'Weight (t)'
+        }
+        
+        # Filter to only include columns that exist and are useful
+        available_cols = [col for col in display_columns.keys() if col in display_vehicles.columns]
+        display_vehicles = display_vehicles[available_cols]
+        
+        # Rename columns for display
+        display_vehicles = display_vehicles.rename(columns={col: display_columns[col] for col in available_cols})
+        
+        # Format numeric columns
+        if 'Mileage' in display_vehicles.columns:
+            display_vehicles['Mileage'] = display_vehicles['Mileage'].apply(lambda x: f"{x:,}" if pd.notna(x) else "")
+        if 'Weight (t)' in display_vehicles.columns:
+            display_vehicles['Weight (t)'] = display_vehicles['Weight (t)'].apply(lambda x: f"{x:.1f}" if pd.notna(x) else "")
+        
+        # Add status styling
+        def highlight_status(val):
+            if val == 'Active':
+                return 'background-color: #4CAF50; color: white; font-weight: bold'
+            elif val == 'Maintenance':
+                return 'background-color: #FF9800; color: white; font-weight: bold'
+            elif val == 'Retired':
+                return 'background-color: #f44336; color: white; font-weight: bold'
+            return ''
+        
+        if 'Status' in display_vehicles.columns:
+            styled_df = display_vehicles.style.map(highlight_status, subset=['Status'])
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        else:
+            st.dataframe(display_vehicles, use_container_width=True, hide_index=True)
     else:
         st.info("No vehicles found. Add your first vehicle above.")
 
@@ -317,8 +360,55 @@ def show_maintenance_content(maintenance_df, vehicles_df):
     # Display maintenance records
     if not maintenance_df.empty:
         st.markdown("### Maintenance History")
+        
+        # Create a cleaner display with only essential columns
         display_maintenance = maintenance_df.copy()
-        display_maintenance['cost'] = display_maintenance['cost'].apply(lambda x: f"£{x:,.2f}")
+        
+        # Map vehicle IDs to readable names
+        if not vehicles_df.empty:
+            vehicle_map = {row['vehicle_id']: f"{row['make']} {row['model']} ({row['license_plate']})" 
+                          for _, row in vehicles_df.iterrows()}
+            display_maintenance['vehicle_name'] = display_maintenance['vehicle_id'].map(vehicle_map)
+        
+        # Select and rename columns for better readability
+        display_columns = {
+            'vehicle_name': 'Vehicle',
+            'service_type': 'Service Type',
+            'service_date': 'Service Date',
+            'cost': 'Cost',
+            'description': 'Description',
+            'next_service_date': 'Next Service'
+        }
+        
+        # Use vehicle_id as fallback if vehicle_name mapping failed
+        if 'vehicle_name' not in display_maintenance.columns:
+            display_columns['vehicle_id'] = 'Vehicle ID'
+            del display_columns['vehicle_name']
+        
+        # Filter to only include columns that exist and are useful
+        available_cols = [col for col in display_columns.keys() if col in display_maintenance.columns]
+        display_maintenance = display_maintenance[available_cols]
+        
+        # Rename columns for display
+        display_maintenance = display_maintenance.rename(columns={col: display_columns[col] for col in available_cols})
+        
+        # Format cost column
+        if 'Cost' in display_maintenance.columns:
+            display_maintenance['Cost'] = display_maintenance['Cost'].apply(lambda x: f"£{x:,.2f}" if pd.notna(x) else "")
+        
+        # Format date columns
+        for date_col in ['Service Date', 'Next Service']:
+            if date_col in display_maintenance.columns:
+                display_maintenance[date_col] = display_maintenance[date_col].apply(
+                    lambda x: x if pd.notna(x) and x != '' else ""
+                )
+        
+        # Truncate description for better display
+        if 'Description' in display_maintenance.columns:
+            display_maintenance['Description'] = display_maintenance['Description'].apply(
+                lambda x: (x[:50] + "...") if isinstance(x, str) and len(x) > 50 else (x if pd.notna(x) else "")
+            )
+        
         st.dataframe(display_maintenance, use_container_width=True, hide_index=True)
     else:
         st.info("No maintenance records found. Add your first record above.")
@@ -421,9 +511,58 @@ def show_tool_hire_content(equipment_df, rentals_df):
     # Display equipment
     if not equipment_df.empty:
         st.markdown("### Equipment Inventory")
+        
+        # Create a cleaner display with only essential columns
         display_equipment = equipment_df.copy()
-        display_equipment['daily_rate'] = display_equipment['daily_rate'].apply(lambda x: f"£{x:,.2f}")
-        st.dataframe(display_equipment, use_container_width=True, hide_index=True)
+        
+        # Select and rename columns for better readability
+        display_columns = {
+            'name': 'Equipment Name',
+            'category': 'Category',
+            'daily_rate': 'Daily Rate',
+            'status': 'Status',
+            'brand': 'Brand',
+            'model': 'Model',
+            'description': 'Description'
+        }
+        
+        # Filter to only include columns that exist and are useful
+        available_cols = [col for col in display_columns.keys() if col in display_equipment.columns]
+        display_equipment = display_equipment[available_cols]
+        
+        # Rename columns for display
+        display_equipment = display_equipment.rename(columns={col: display_columns[col] for col in available_cols})
+        
+        # Format daily rate column
+        if 'Daily Rate' in display_equipment.columns:
+            display_equipment['Daily Rate'] = display_equipment['Daily Rate'].apply(lambda x: f"£{x:,.2f}" if pd.notna(x) else "")
+        
+        # Truncate description for better display
+        if 'Description' in display_equipment.columns:
+            display_equipment['Description'] = display_equipment['Description'].apply(
+                lambda x: (x[:40] + "...") if isinstance(x, str) and len(x) > 40 else (x if pd.notna(x) else "")
+            )
+        
+        # Clean up None values
+        display_equipment = display_equipment.fillna("")
+        
+        # Add status styling
+        def highlight_status(val):
+            if val == 'Available':
+                return 'background-color: #4CAF50; color: white; font-weight: bold'
+            elif val == 'Rented':
+                return 'background-color: #FF9800; color: white; font-weight: bold'
+            elif val == 'Maintenance':
+                return 'background-color: #f44336; color: white; font-weight: bold'
+            elif val == 'Retired':
+                return 'background-color: #666666; color: white; font-weight: bold'
+            return ''
+        
+        if 'Status' in display_equipment.columns:
+            styled_df = display_equipment.style.map(highlight_status, subset=['Status'])
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        else:
+            st.dataframe(display_equipment, use_container_width=True, hide_index=True)
     else:
         st.info("No equipment found. Add your first equipment above.")
 
@@ -502,7 +641,50 @@ def show_machine_inventory_content():
     # Display machines
     if not machines_df.empty:
         st.markdown("### Current Machines")
-        st.dataframe(machines_df, use_container_width=True, hide_index=True)
+        
+        # Create a cleaner display with only essential columns
+        display_machines = machines_df.copy()
+        
+        # Select and rename columns for better readability
+        display_columns = {
+            'make': 'Make',
+            'model': 'Model', 
+            'year': 'Year',
+            'machine_type': 'Type',
+            'status': 'Status',
+            'hours': 'Hours',
+            'weight': 'Weight (t)',
+            'serial_number': 'Serial Number'
+        }
+        
+        # Filter to only include columns that exist and are useful
+        available_cols = [col for col in display_columns.keys() if col in display_machines.columns]
+        display_machines = display_machines[available_cols]
+        
+        # Rename columns for display
+        display_machines = display_machines.rename(columns={col: display_columns[col] for col in available_cols})
+        
+        # Format numeric columns
+        if 'Hours' in display_machines.columns:
+            display_machines['Hours'] = display_machines['Hours'].apply(lambda x: f"{x:,}" if pd.notna(x) else "")
+        if 'Weight (t)' in display_machines.columns:
+            display_machines['Weight (t)'] = display_machines['Weight (t)'].apply(lambda x: f"{x:.1f}" if pd.notna(x) else "")
+        
+        # Add status styling
+        def highlight_status(val):
+            if val == 'Active':
+                return 'background-color: #4CAF50; color: white; font-weight: bold'
+            elif val == 'Maintenance':
+                return 'background-color: #FF9800; color: white; font-weight: bold'
+            elif val == 'Retired':
+                return 'background-color: #f44336; color: white; font-weight: bold'
+            return ''
+        
+        if 'Status' in display_machines.columns:
+            styled_df = display_machines.style.map(highlight_status, subset=['Status'])
+            st.dataframe(styled_df, use_container_width=True, hide_index=True)
+        else:
+            st.dataframe(display_machines, use_container_width=True, hide_index=True)
     else:
         st.info("No machines found. Add your first machine above.")
 
