@@ -32,30 +32,30 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
     # Navigation tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🚗 Vehicles", 
+        "🏗️ Machines",
         "🔧 Maintenance", 
         "📊 Dashboard", 
         "⚙️ Tool Hire", 
-        "📈 Statistics", 
-        "🏗️ Machines"
+        "📈 Statistics"
     ])
     
     with tab1:
         show_vehicle_inventory_content(vehicles_df)
     
     with tab2:
-        show_maintenance_content(maintenance_df, vehicles_df)
+        show_machine_inventory_content()
     
     with tab3:
-        show_dashboard_content(vehicles_df, maintenance_df, equipment_df, rentals_df)
+        show_maintenance_content(maintenance_df, vehicles_df)
     
     with tab4:
-        show_tool_hire_content(equipment_df, rentals_df)
+        show_dashboard_content(vehicles_df, maintenance_df, equipment_df, rentals_df)
     
     with tab5:
-        show_statistics_content(vehicles_df, maintenance_df, equipment_df, rentals_df)
+        show_tool_hire_content(equipment_df, rentals_df)
     
     with tab6:
-        show_machine_inventory_content()
+        show_statistics_content(vehicles_df, maintenance_df, equipment_df, rentals_df)
     
     # Footer with quick actions and export options
     st.markdown("---")
@@ -417,6 +417,26 @@ def main():
         min-height: 100vh;
     }
     
+    /* Completely hide sidebar */
+    .stSidebar {
+        display: none !important;
+    }
+    
+    .stSidebar > div {
+        display: none !important;
+    }
+    
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    
+    /* Make main content full width */
+    .main .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+    }
+    
     /* Tab Styling */
     .stTabs {
         background: rgba(255, 255, 255, 0.03);
@@ -460,26 +480,111 @@ def main():
         box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
     }
     
-    /* Input Styling */
+    /* Improved Input Styling for Better Readability */
     .stTextInput > div > div > input {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        color: #e0e6ed;
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(33, 150, 243, 0.3) !important;
+        border-radius: 8px !important;
+        color: #1a1a2e !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        padding: 0.75rem !important;
+        transition: all 0.3s ease !important;
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: #2196f3;
-        box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        border-color: #2196f3 !important;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2) !important;
+        background: rgba(255, 255, 255, 1) !important;
     }
     
+    .stTextInput > div > div > input::placeholder {
+        color: #666 !important;
+        opacity: 0.8 !important;
+    }
+    
+    /* Number Input Styling */
+    .stNumberInput > div > div > input {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(33, 150, 243, 0.3) !important;
+        border-radius: 8px !important;
+        color: #1a1a2e !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        padding: 0.75rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stNumberInput > div > div > input:focus {
+        border-color: #2196f3 !important;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2) !important;
+        background: rgba(255, 255, 255, 1) !important;
+    }
+    
+    /* Selectbox Styling */
     .stSelectbox > div > div > div {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        color: #e0e6ed;
-        transition: all 0.3s ease;
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(33, 150, 243, 0.3) !important;
+        border-radius: 8px !important;
+        color: #1a1a2e !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        padding: 0.5rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stSelectbox > div > div > div:hover {
+        border-color: #2196f3 !important;
+        background: rgba(255, 255, 255, 1) !important;
+    }
+    
+    /* Date Input Styling */
+    .stDateInput > div > div > input {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(33, 150, 243, 0.3) !important;
+        border-radius: 8px !important;
+        color: #1a1a2e !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        padding: 0.75rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stDateInput > div > div > input:focus {
+        border-color: #2196f3 !important;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2) !important;
+        background: rgba(255, 255, 255, 1) !important;
+    }
+    
+    /* Text Area Styling */
+    .stTextArea > div > div > textarea {
+        background: rgba(255, 255, 255, 0.95) !important;
+        border: 2px solid rgba(33, 150, 243, 0.3) !important;
+        border-radius: 8px !important;
+        color: #1a1a2e !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+        padding: 0.75rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .stTextArea > div > div > textarea:focus {
+        border-color: #2196f3 !important;
+        box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2) !important;
+        background: rgba(255, 255, 255, 1) !important;
+    }
+    
+    .stTextArea > div > div > textarea::placeholder {
+        color: #666 !important;
+        opacity: 0.8 !important;
+    }
+    
+    /* Form Labels */
+    .stTextInput > label, .stNumberInput > label, .stSelectbox > label, .stDateInput > label, .stTextArea > label {
+        color: #e0e6ed !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        margin-bottom: 0.5rem !important;
     }
     
     /* Metrics Styling */
@@ -505,6 +610,15 @@ def main():
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
+    /* Form styling */
+    .stForm {
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+    }
+    
     @media (max-width: 768px) {
         .stApp {
             padding: 0.5rem;
@@ -513,6 +627,11 @@ def main():
         .stTabs [data-baseweb="tab"] {
             padding: 0.375rem 0.75rem;
             font-size: 0.875rem;
+        }
+        
+        .main .block-container {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
         }
     }
     </style>
