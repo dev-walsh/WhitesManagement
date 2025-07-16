@@ -8,6 +8,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from utils.data_manager import DataManager
 from utils.validators import validate_weight, validate_year
+from login import check_password, show_logout_button
 
 st.set_page_config(
     page_title="Vehicle Inventory", 
@@ -54,8 +55,14 @@ def create_sidebar():
         st.markdown("---")
         st.markdown("### 💡 System Info")
         st.info("Offline system using local CSV files. No internet required!")
+        
+        # Show logout functionality
+        show_logout_button()
 
 def main():
+    # Check authentication first
+    if not check_password():
+        st.stop()
     # Custom CSS for better styling
     st.markdown("""
     <style>

@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime, date
 import os
 from utils.data_manager import DataManager
+from login import check_password, show_logout_button, get_current_user
 
 # Configure the page
 st.set_page_config(
@@ -202,8 +203,15 @@ def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
         st.markdown("---")
         st.markdown("### 💡 System Info")
         st.info("Offline system using local CSV files. No internet required!")
+        
+        # Show logout functionality
+        show_logout_button()
 
 def main():
+    # Check authentication first
+    if not check_password():
+        st.stop()
+    
     # Custom CSS for improved UI
     st.markdown("""
     <style>
