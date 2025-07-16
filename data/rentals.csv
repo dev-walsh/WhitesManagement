@@ -1,1 +1,5 @@
-rental_id,equipment_id,customer_name,customer_phone,customer_email,start_date,expected_return_date,actual_return_date,rental_rate,deposit,additional_charges,status,return_condition,damage_notes,notes
+rental_id,equipment_id,customer_name,customer_phone,customer_email,start_date,expected_return_date,actual_return_date,rental_rate,deposit,additional_charges,status,return_condition,damage_notes,notes,rental_date,return_date
+08472c21,8a3fcf1a,ABC Construction,,,,,,75.0,,,Returned,,,,2024-06-01,2024-06-05
+df2c3c8e,f2a4671a,XYZ Builders,,,,,,25.0,,,Returned,,,,2024-06-10,2024-06-15
+4c97abb4,d5a754ad,Smith & Sons,,,,,,40.0,,,Active,,,,2024-06-20,
+5ac6c264,d32089b2,Johnson Construction,,,,,,30.0,,,Returned,,,,2024-06-25,2024-06-30

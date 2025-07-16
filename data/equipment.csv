@@ -1,1 +1,7 @@
-equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes
+equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes,description
+8a3fcf1a,Concrete Mixer,Other,,,,75.0,,,,Available,,,Professional concrete mixer for construction
+f2a4671a,Angle Grinder,Cutting,,,,25.0,,,,Available,,,9 inch angle grinder with safety guard
+d5a754ad,Drill Press,Drilling,,,,40.0,,,,Rented,,,Heavy duty drill press
+d32089b2,Laser Level,Measuring,,,,30.0,,,,Available,,,Rotary laser level with tripod
+63fe1287,Safety Harness,Safety,,,,15.0,,,,Available,,,Full body safety harness
+e87fe87b,Crane,Lifting,,,,250.0,,,,Maintenance,,,Mobile crane 50 ton capacity

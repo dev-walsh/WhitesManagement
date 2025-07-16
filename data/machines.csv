@@ -1,1 +1,6 @@
-machine_id,whites_id,vin_chassis,make,model,year,weight,machine_type,daily_rate,weekly_rate,status,hours,defects,notes
+machine_id,whites_id,vin_chassis,make,model,year,weight,machine_type,daily_rate,weekly_rate,status,hours,defects,notes,serial_number
+c43786e2,,,Caterpillar,320D,2020,20.0,Excavator,,,Active,2500,,,CAT123456
+36a8fbb4,,,Komatsu,PC200,2019,18.5,Excavator,,,Active,3200,,,KOM789012
+394648c7,,,JCB,8085,2021,8.5,Excavator,,,Maintenance,1800,,,JCB345678
+93f43a70,,,Liebherr,L566,2020,15.2,Loader,,,Active,2100,,,LIE901234
+5f8c91df,,,Volvo,A40G,2018,35.0,Bulldozer,,,Active,4500,,,VOL567890

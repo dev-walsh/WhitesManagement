@@ -1,1 +1,6 @@
-maintenance_id,vehicle_id,date,type,description,cost,mileage,service_provider,next_due_mileage
+maintenance_id,vehicle_id,date,type,description,cost,mileage,service_provider,next_due_mileage,service_type,service_date,next_service_date
+f777e3eb,8c89557f,,,Full oil change and filter replacement,85.5,,,,Oil Change,2024-01-15,2024-04-15
+df35fdf8,bc421a10,,,Front brake pads and discs replaced,320.0,,,,Brake Service,2024-02-20,2024-08-20
+c5b149ac,26a4100d,,,Annual MOT test - passed,54.85,,,,MOT Test,2024-03-10,2025-03-10
+610fca8c,8c89557f,,,Tire rotation and pressure check,45.0,,,,Tire Rotation,2024-04-05,2024-10-05
+d450c910,75d57369,,,Engine timing chain replacement,850.0,,,,Engine Repair,2024-05-12,2024-11-12
