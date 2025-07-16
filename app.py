@@ -38,12 +38,12 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
     """, unsafe_allow_html=True)
     
     # Navigation tabs
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab5, tab4, tab3, tab6 = st.tabs([
         "🚗 Vehicles", 
         "🏗️ Machines",
+        "⚙️ Tool Hire",
         "🔧 Maintenance", 
         "📊 Dashboard", 
-        "⚙️ Tool Hire", 
         "📈 Statistics"
     ])
     
@@ -636,8 +636,8 @@ def show_tool_hire_content(equipment_df, rentals_df):
             with col1:
                 name = st.text_input("Equipment Name*", placeholder="Excavator")
                 category = st.selectbox("Category*", [
-                    "Excavation", "Lifting", "Cutting", "Drilling", 
-                    "Measuring", "Safety", "Other"
+                    "Construction", "Excavation", "Lifting", "Cutting", "Drilling", 
+                    "Measuring", "Safety", "Power Tools", "Access Equipment", "Other"
                 ])
                 brand = st.text_input("Brand", placeholder="Caterpillar")
                 model = st.text_input("Model", placeholder="320D")
@@ -748,10 +748,11 @@ def show_tool_hire_content(equipment_df, rentals_df):
                 col1, col2, col3 = st.columns(3)
                 with col1:
                     name = st.text_input("Equipment Name*", value=selected_equipment_data.get('name', ''))
-                    category = st.selectbox("Category*", [
-                        "Excavation", "Lifting", "Cutting", "Drilling", 
-                        "Measuring", "Safety", "Other"
-                    ], index=["Excavation", "Lifting", "Cutting", "Drilling", "Measuring", "Safety", "Other"].index(selected_equipment_data.get('category', 'Other')))
+                    category_options = ["Construction", "Excavation", "Lifting", "Cutting", "Drilling", "Measuring", "Safety", "Power Tools", "Access Equipment", "Other"]
+                    selected_category = selected_equipment_data.get('category', 'Other')
+                    if selected_category not in category_options:
+                        selected_category = 'Other'
+                    category = st.selectbox("Category*", category_options, index=category_options.index(selected_category))
                     brand = st.text_input("Brand", value=selected_equipment_data.get('brand', '') if pd.notna(selected_equipment_data.get('brand')) else '')
                     model = st.text_input("Model", value=selected_equipment_data.get('model', '') if pd.notna(selected_equipment_data.get('model')) else '')
                     serial_number = st.text_input("Serial Number", value=selected_equipment_data.get('serial_number', '') if pd.notna(selected_equipment_data.get('serial_number')) else '')
