@@ -7,6 +7,8 @@ The Whites Management System is a Streamlit-based web application designed for m
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+UI Design: Modern, sleek dark theme with mobile-responsive design.
+Color Scheme: Dark gradients with blue accents and professional styling.
 
 ## System Architecture
 
@@ -15,6 +17,9 @@ Preferred communication style: Simple, everyday language.
 - **UI Pattern**: Multi-page application with consistent sidebar navigation
 - **Layout**: Wide layout with expandable sidebar for navigation
 - **Visualization**: Plotly for charts and graphs on dashboard and statistics pages
+- **Design System**: Modern dark theme with gradient backgrounds and mobile-responsive design
+- **Color Palette**: Dark blue gradients (#1a1a2e to #0f3460) with light blue accents (#2196f3)
+- **Mobile Support**: Responsive design with optimized touch targets and mobile-first approach
 
 ### Backend Architecture
 - **Data Layer**: CSV-based file storage system
