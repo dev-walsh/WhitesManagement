@@ -71,43 +71,70 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
     # Custom CSS for blue export buttons
     st.markdown("""
     <style>
+    /* All download buttons should have blue gradient */
     .stDownloadButton > button {
-        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
-        width: 100%;
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3) !important;
+        width: 100% !important;
     }
     .stDownloadButton > button:hover {
-        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-        box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4);
-        transform: translateY(-2px);
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+        box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4) !important;
+        transform: translateY(-2px) !important;
     }
     .stDownloadButton > button:active {
-        transform: translateY(0px);
-        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+        transform: translateY(0px) !important;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3) !important;
     }
     
     /* Style disabled buttons in export section */
     .stButton > button[disabled] {
-        background: linear-gradient(135deg, #666666 0%, #555555 100%);
-        color: #cccccc;
-        border: none;
-        border-radius: 8px;
-        padding: 0.5rem 1rem;
-        font-weight: 500;
-        width: 100%;
-        cursor: not-allowed;
-        opacity: 0.7;
+        background: linear-gradient(135deg, #666666 0%, #555555 100%) !important;
+        color: #cccccc !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+        width: 100% !important;
+        cursor: not-allowed !important;
+        opacity: 0.7 !important;
     }
     
     .stButton > button[disabled]:hover {
-        background: linear-gradient(135deg, #666666 0%, #555555 100%);
-        transform: none;
+        background: linear-gradient(135deg, #666666 0%, #555555 100%) !important;
+        transform: none !important;
+    }
+    
+    /* Force blue gradient on all export buttons regardless of position */
+    div[data-testid="stVerticalBlock"] .stDownloadButton > button,
+    div[data-testid="column"] .stDownloadButton > button,
+    .stDownloadButton button,
+    button[kind="primary"] {
+        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+        padding: 0.5rem 1rem !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3) !important;
+        width: 100% !important;
+    }
+    
+    /* Hover effects for all export buttons */
+    div[data-testid="stVerticalBlock"] .stDownloadButton > button:hover,
+    div[data-testid="column"] .stDownloadButton > button:hover,
+    .stDownloadButton button:hover,
+    button[kind="primary"]:hover {
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+        box-shadow: 0 4px 8px rgba(33, 150, 243, 0.4) !important;
+        transform: translateY(-2px) !important;
     }
     </style>
     """, unsafe_allow_html=True)
