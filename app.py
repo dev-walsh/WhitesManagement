@@ -37,11 +37,11 @@ def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
         }
         
         .nav-section {
-            background: rgba(38, 50, 56, 0.6);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
             padding: 1.5rem;
             margin: 1rem 0;
-            border: 1px solid #546e7a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
         }
         
@@ -55,12 +55,12 @@ def create_sidebar(vehicles_df, maintenance_df, equipment_df, rentals_df):
         }
         
         .current-user {
-            background: linear-gradient(135deg, #37474f 0%, #263238 100%);
+            background: rgba(255, 255, 255, 0.02);
             color: #e0e6ed;
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
-            border: 1px solid #546e7a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
             font-size: 0.9rem;
         }
@@ -388,20 +388,19 @@ def main():
     }
     /* Metrics Cards */
     .metric-card {
-        background: linear-gradient(135deg, #263238 0%, #37474f 100%);
+        background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
         padding: 1.5rem;
         margin: 0.5rem 0;
-        border: 1px solid #546e7a;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
     
     .metric-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 48px rgba(33, 150, 243, 0.2);
-        border-color: #2196f3;
+        transform: translateY(-2px);
+        border-color: rgba(33, 150, 243, 0.3);
+        box-shadow: 0 4px 20px rgba(33, 150, 243, 0.1);
     }
     
     /* Section Headers */
@@ -419,8 +418,8 @@ def main():
     
     /* Quick Action Buttons */
     .quick-action-btn {
-        background: linear-gradient(135deg, #37474f 0%, #263238 100%);
-        border: 1px solid #546e7a;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
         padding: 1.5rem;
         margin: 0.5rem 0;
@@ -431,35 +430,36 @@ def main():
     }
     
     .quick-action-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 36px rgba(33, 150, 243, 0.25);
-        border-color: #2196f3;
-        background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+        transform: translateY(-2px);
+        border-color: rgba(33, 150, 243, 0.4);
+        background: rgba(33, 150, 243, 0.1);
+        box-shadow: 0 8px 24px rgba(33, 150, 243, 0.15);
     }
     
     /* Data Tables */
     .data-table {
-        background: linear-gradient(135deg, #263238 0%, #37474f 100%);
+        background: rgba(255, 255, 255, 0.02);
         border-radius: 12px;
         padding: 1.5rem;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
         margin: 1.5rem 0;
-        border: 1px solid #546e7a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
     }
     
     /* Streamlit Metrics Override */
     .stMetric {
-        background: linear-gradient(135deg, #263238 0%, #37474f 100%) !important;
+        background: rgba(255, 255, 255, 0.03) !important;
         border-radius: 12px !important;
         padding: 1.5rem !important;
-        border: 1px solid #546e7a !important;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
         transition: all 0.3s ease !important;
     }
     
     .stMetric:hover {
         transform: translateY(-2px) !important;
-        box-shadow: 0 12px 48px rgba(33, 150, 243, 0.2) !important;
+        border-color: rgba(33, 150, 243, 0.3) !important;
+        box-shadow: 0 4px 20px rgba(33, 150, 243, 0.1) !important;
     }
     
     .stMetric > div {
@@ -525,8 +525,8 @@ def main():
     
     /* Input Styling */
     .stTextInput > div > div > input {
-        background: rgba(38, 50, 56, 0.8) !important;
-        border: 1px solid #546e7a !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 8px !important;
         color: #e0e6ed !important;
         transition: all 0.3s ease !important;
@@ -538,8 +538,8 @@ def main():
     }
     
     .stSelectbox > div > div > div {
-        background: rgba(38, 50, 56, 0.8) !important;
-        border: 1px solid #546e7a !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 8px !important;
         color: #e0e6ed !important;
         transition: all 0.3s ease !important;

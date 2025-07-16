@@ -51,11 +51,11 @@ def check_password():
         max-width: 400px;
         margin: 2rem auto;
         padding: 2.5rem;
-        background: linear-gradient(135deg, #263238 0%, #37474f 100%);
+        background: rgba(255, 255, 255, 0.03);
         border-radius: 20px;
         box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-        border: 1px solid #546e7a;
-        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
     }
     
     .login-header {
@@ -81,8 +81,8 @@ def check_password():
     }
     
     .stTextInput > div > div > input {
-        background: rgba(38, 50, 56, 0.8) !important;
-        border: 1px solid #546e7a !important;
+        background: rgba(255, 255, 255, 0.05) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 12px !important;
         color: #e0e6ed !important;
         padding: 1rem !important;
@@ -118,10 +118,10 @@ def check_password():
         margin-top: 2rem;
         color: #b0bec5;
         font-size: 0.9rem;
-        background: rgba(38, 50, 56, 0.4);
+        background: rgba(255, 255, 255, 0.02);
         padding: 1rem;
         border-radius: 8px;
-        border: 1px solid #546e7a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
     
     .login-footer code {
@@ -219,8 +219,8 @@ def show_logout_button():
         st.markdown("""
         <style>
         .logout-section {
-            background: rgba(244, 67, 54, 0.1);
-            border: 1px solid #f44336;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(244, 67, 54, 0.3);
             border-radius: 12px;
             padding: 1rem;
             text-align: center;
