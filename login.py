@@ -47,6 +47,26 @@ def check_password():
         min-height: 100vh !important;
     }
     
+    /* Completely hide sidebar on login page */
+    .stSidebar {
+        display: none !important;
+    }
+    
+    .stSidebar > div {
+        display: none !important;
+    }
+    
+    section[data-testid="stSidebar"] {
+        display: none !important;
+    }
+    
+    /* Make main content full width */
+    .main .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+    }
+    
     /* Hide default Streamlit elements that might create empty containers */
     .stApp > header {
         display: none !important;

@@ -6,6 +6,14 @@ from utils.data_manager import DataManager
 from login import check_password, show_logout_button, get_current_user, logout
 import plotly.express as px
 
+# Set page configuration at the top level
+st.set_page_config(
+    page_title="Whites Management System",
+    page_icon="🚗",
+    layout="wide",
+    initial_sidebar_state="collapsed"
+)
+
 # Initialize data manager
 @st.cache_resource
 def get_data_manager():
@@ -395,14 +403,6 @@ def create_excel_export(dataframes, filename):
 
 def main():
     """Main application entry point"""
-    # Set page configuration
-    st.set_page_config(
-        page_title="Whites Management System",
-        page_icon="🚗",
-        layout="wide",
-        initial_sidebar_state="collapsed"
-    )
-    
     # Check authentication first
     if not check_password():
         st.stop()
