@@ -71,6 +71,12 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
     
     with col1:
         st.markdown("### 📥 Quick Export")
+        
+        # Get fresh data for machines
+        dm = get_data_manager()
+        machines_df = dm.load_machines()
+        
+        # Vehicles Export
         if not vehicles_df.empty:
             excel_vehicles = create_excel_export({"Vehicles": vehicles_df}, "vehicles.xlsx")
             st.download_button(
@@ -80,7 +86,36 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 use_container_width=True
             )
+        else:
+            st.button("🚗 Vehicles Excel", disabled=True, use_container_width=True, help="No vehicles to export")
         
+        # Machines Export
+        if not machines_df.empty:
+            excel_machines = create_excel_export({"Machines": machines_df}, "machines.xlsx")
+            st.download_button(
+                label="🏗️ Machines Excel",
+                data=excel_machines,
+                file_name=f"machines_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        else:
+            st.button("🏗️ Machines Excel", disabled=True, use_container_width=True, help="No machines to export")
+        
+        # Maintenance Export
+        if not maintenance_df.empty:
+            excel_maintenance = create_excel_export({"Maintenance": maintenance_df}, "maintenance.xlsx")
+            st.download_button(
+                label="🔧 Maintenance Excel",
+                data=excel_maintenance,
+                file_name=f"maintenance_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        else:
+            st.button("🔧 Maintenance Excel", disabled=True, use_container_width=True, help="No maintenance records to export")
+        
+        # Equipment Export
         if not equipment_df.empty:
             excel_equipment = create_excel_export({"Equipment": equipment_df}, "equipment.xlsx")
             st.download_button(
@@ -90,10 +125,50 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                 use_container_width=True
             )
+        else:
+            st.button("⚙️ Equipment Excel", disabled=True, use_container_width=True, help="No equipment to export")
+        
+        # Complete Export (All Data)
+        has_any_data = not (vehicles_df.empty and machines_df.empty and maintenance_df.empty and equipment_df.empty)
+        if has_any_data:
+            all_data = {}
+            if not vehicles_df.empty:
+                all_data["Vehicles"] = vehicles_df
+            if not machines_df.empty:
+                all_data["Machines"] = machines_df
+            if not maintenance_df.empty:
+                all_data["Maintenance"] = maintenance_df
+            if not equipment_df.empty:
+                all_data["Equipment"] = equipment_df
+            
+            excel_all = create_excel_export(all_data, "all_data.xlsx")
+            st.download_button(
+                label="📊 Complete Export",
+                data=excel_all,
+                file_name=f"whites_management_{datetime.now().strftime('%Y%m%d')}.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                use_container_width=True
+            )
+        else:
+            st.button("📊 Complete Export", disabled=True, use_container_width=True, help="No data to export")
     
     with col2:
         st.markdown("### 💡 System Info")
         st.info("Offline system using local CSV files. No internet required!")
+        
+        # Show data summary
+        total_vehicles = len(vehicles_df)
+        total_machines = len(machines_df)
+        total_maintenance = len(maintenance_df)
+        total_equipment = len(equipment_df)
+        
+        st.markdown(f"""
+        **Data Summary:**
+        - 🚗 Vehicles: {total_vehicles}
+        - 🏗️ Machines: {total_machines}
+        - 🔧 Maintenance Records: {total_maintenance}
+        - ⚙️ Equipment: {total_equipment}
+        """)
     
     with col3:
         st.markdown("### 🚪 Account")
