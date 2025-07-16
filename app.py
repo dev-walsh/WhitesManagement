@@ -198,8 +198,7 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
             st.button("📊 Complete Export", disabled=True, use_container_width=True, help="No data to export")
     
     with col2:
-        st.markdown("### 💡 System Info")
-        st.info("Offline system using local CSV files. No internet required!")
+        st.markdown("### 📊 Quick Export")
         
         # Show data summary
         total_vehicles = len(vehicles_df)
@@ -224,6 +223,10 @@ def create_single_page_layout(vehicles_df, maintenance_df, equipment_df, rentals
 def show_vehicle_inventory_content(vehicles_df):
     """Vehicle inventory content"""
     st.markdown("### 🚗 Vehicle Inventory Management")
+    
+    # Reload data to ensure we have the latest vehicles
+    dm = get_data_manager()
+    vehicles_df = dm.load_vehicles()
     
     # Add new vehicle form
     with st.expander("➕ Add New Vehicle"):
@@ -390,6 +393,11 @@ def show_vehicle_inventory_content(vehicles_df):
 def show_maintenance_content(maintenance_df, vehicles_df):
     """Maintenance records content"""
     st.markdown("### 🔧 Maintenance Records")
+    
+    # Reload data to ensure we have the latest maintenance records
+    dm = get_data_manager()
+    maintenance_df = dm.load_maintenance()
+    vehicles_df = dm.load_vehicles()
     
     # Add new maintenance record
     with st.expander("➕ Add New Maintenance Record"):
@@ -588,6 +596,11 @@ def show_dashboard_content(vehicles_df, maintenance_df, equipment_df, rentals_df
 def show_tool_hire_content(equipment_df, rentals_df):
     """Tool hire content"""
     st.markdown("### ⚙️ Tool Hire Management")
+    
+    # Reload data to ensure we have the latest equipment
+    dm = get_data_manager()
+    equipment_df = dm.load_equipment()
+    rentals_df = dm.load_rentals()
     
     # Add new equipment
     with st.expander("➕ Add New Equipment"):
@@ -812,6 +825,7 @@ def show_machine_inventory_content():
     """Machine inventory content"""
     st.markdown("### 🏗️ Machine Inventory (Plant Vehicles)")
     
+    # Reload data to ensure we have the latest machines
     dm = get_data_manager()
     machines_df = dm.load_machines()
     

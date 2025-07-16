@@ -1,1 +1,2 @@
-equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes
+equipment_id,name,category,brand,model,serial_number,daily_rate,weekly_rate,purchase_price,purchase_date,status,last_service_date,notes,description
+2b8fd935,test,Excavation,test,test,test,50.0,10.0,,2025-07-01,Available,2025-07-15,test,test
