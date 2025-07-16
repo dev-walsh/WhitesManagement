@@ -1,4 +1,1 @@
 equipment_id,name,category,daily_rate,status,whites_id,brand,model,serial_number,weekly_rate,purchase_price,purchase_date,last_service_date,description,notes
-9382490000000.0,Concrete Mixer,Construction,85.0,Available,E001,Belle,Minimix 150,BEL001234,450.0,2500.0,2020-03-15,2024-01-15,Portable concrete mixer for small jobs,Updated status and notes
-da9b6550,Angle Grinder,Power Tools,15.0,Available,E002,Bosch,GWS 7-125,BOS567890,75.0,120.0,2023-06-20,2024-06-20,125mm angle grinder with safety guard,Recently serviced
-ff9dec46,Scaffolding Tower,Access Equipment,35.0,Rented,E003,Youngman,BoSS X3,YOU123456,200.0,1800.0,2022-09-10,2024-03-10,Mobile scaffold tower 6.2m working height,Currently on hire until next week

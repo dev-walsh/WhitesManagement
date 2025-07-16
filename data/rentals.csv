@@ -1,4 +1,1 @@
 rental_id,equipment_id,customer_name,customer_phone,customer_email,start_date,expected_return_date,actual_return_date,rental_rate,deposit,additional_charges,status,return_condition,damage_notes,notes
-a3737d5a,9382490000000.0,John Smith Construction,1234567890,john@smithconstruction.co.uk,2024-01-20,2024-01-27,,85.0,200.0,0.0,Active,,,Updated rental notes
-dafe92d2,da9b6550,ABC Building Ltd,1987654321,info@abcbuilding.com,2024-01-15,2024-01-16,2024-01-16,15.0,50.0,0.0,Completed,Good,,Single day rental
-c5d856a1,ff9dec46,Tower Maintenance Co,1122334455,maintenance@towerco.uk,2024-01-10,2024-01-24,2024-01-25,35.0,300.0,35.0,Completed,Fair,Minor scratches on platform,Two week rental - late return fee applied
