@@ -228,18 +228,25 @@ def show_vehicle_inventory_content(vehicles_df):
     # Add new vehicle form
     with st.expander("➕ Add New Vehicle"):
         with st.form("add_vehicle_form"):
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 make = st.text_input("Make*", placeholder="Toyota")
                 model = st.text_input("Model*", placeholder="Hilux")
                 year = st.number_input("Year*", min_value=1900, max_value=2030, value=2020)
                 license_plate = st.text_input("License Plate*", placeholder="ABC123")
+                fuel_type = st.selectbox("Fuel Type*", ["Petrol", "Diesel", "Electric", "Hybrid"])
             
             with col2:
-                fuel_type = st.selectbox("Fuel Type*", ["Petrol", "Diesel", "Electric", "Hybrid"])
+                whites_id = st.text_input("Whites ID", placeholder="W001")
+                vin_chassis = st.text_input("VIN/Chassis", placeholder="VIN123456789")
+                vehicle_type = st.selectbox("Vehicle Type", ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"])
                 mileage = st.number_input("Mileage*", min_value=0, value=0)
                 weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=1.5, format="%.1f")
+            
+            with col3:
                 status = st.selectbox("Status*", ["Active", "Maintenance", "Retired"])
+                defects = st.text_area("Defects", placeholder="List any known defects...")
+                notes = st.text_area("Notes", placeholder="Additional notes...")
             
             if st.form_submit_button("Add Vehicle", use_container_width=True):
                 if make and model and license_plate:
@@ -251,7 +258,12 @@ def show_vehicle_inventory_content(vehicles_df):
                         'fuel_type': fuel_type,
                         'mileage': mileage,
                         'weight': weight,
-                        'status': status
+                        'status': status,
+                        'whites_id': whites_id if whites_id else None,
+                        'vin_chassis': vin_chassis if vin_chassis else None,
+                        'vehicle_type': vehicle_type if vehicle_type else None,
+                        'defects': defects if defects else None,
+                        'notes': notes if notes else None
                     }
                     dm = get_data_manager()
                     dm.add_vehicle(vehicle_data)
@@ -451,25 +463,7 @@ def show_dashboard_content(vehicles_df, maintenance_df, equipment_df, rentals_df
             delta=f"{len(rentals_df)} Rentals"
         )
     
-    # Charts
-    if not vehicles_df.empty:
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("### Vehicle Status Distribution")
-            status_counts = vehicles_df['status'].value_counts()
-            fig = px.pie(values=status_counts.values, names=status_counts.index, 
-                        title="Vehicle Status Distribution")
-            fig.update_layout(template="plotly_dark")
-            st.plotly_chart(fig, use_container_width=True)
-        
-        with col2:
-            st.markdown("### Fuel Type Distribution")
-            fuel_counts = vehicles_df['fuel_type'].value_counts()
-            fig = px.bar(x=fuel_counts.index, y=fuel_counts.values, 
-                        title="Fuel Type Distribution")
-            fig.update_layout(template="plotly_dark")
-            st.plotly_chart(fig, use_container_width=True)
+
 
 
 def show_tool_hire_content(equipment_df, rentals_df):
@@ -479,18 +473,28 @@ def show_tool_hire_content(equipment_df, rentals_df):
     # Add new equipment
     with st.expander("➕ Add New Equipment"):
         with st.form("add_equipment_form"):
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 name = st.text_input("Equipment Name*", placeholder="Excavator")
                 category = st.selectbox("Category*", [
                     "Excavation", "Lifting", "Cutting", "Drilling", 
                     "Measuring", "Safety", "Other"
                 ])
-                daily_rate = st.number_input("Daily Rate (£)*", min_value=0.0, value=50.0, format="%.2f")
+                brand = st.text_input("Brand", placeholder="Caterpillar")
+                model = st.text_input("Model", placeholder="320D")
+                serial_number = st.text_input("Serial Number", placeholder="SN123456")
             
             with col2:
-                description = st.text_area("Description", placeholder="Equipment details...")
+                daily_rate = st.number_input("Daily Rate (£)*", min_value=0.0, value=50.0, format="%.2f")
+                weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, value=0.0, format="%.2f")
+                purchase_price = st.number_input("Purchase Price (£)", min_value=0.0, value=0.0, format="%.2f")
+                purchase_date = st.date_input("Purchase Date", value=None)
+                last_service_date = st.date_input("Last Service Date", value=None)
+            
+            with col3:
                 status = st.selectbox("Status*", ["Available", "Rented", "Maintenance", "Retired"])
+                description = st.text_area("Description", placeholder="Equipment details...")
+                notes = st.text_area("Notes", placeholder="Additional notes...")
             
             if st.form_submit_button("Add Equipment", use_container_width=True):
                 if name and category:
@@ -498,8 +502,16 @@ def show_tool_hire_content(equipment_df, rentals_df):
                         'name': name,
                         'category': category,
                         'daily_rate': daily_rate,
-                        'description': description,
-                        'status': status
+                        'status': status,
+                        'brand': brand if brand else None,
+                        'model': model if model else None,
+                        'serial_number': serial_number if serial_number else None,
+                        'weekly_rate': weekly_rate if weekly_rate > 0 else None,
+                        'purchase_price': purchase_price if purchase_price > 0 else None,
+                        'purchase_date': purchase_date.strftime('%Y-%m-%d') if purchase_date else None,
+                        'last_service_date': last_service_date.strftime('%Y-%m-%d') if last_service_date else None,
+                        'description': description if description else None,
+                        'notes': notes if notes else None
                     }
                     dm = get_data_manager()
                     dm.add_equipment(equipment_data)
@@ -604,12 +616,13 @@ def show_machine_inventory_content():
     # Add new machine
     with st.expander("➕ Add New Machine"):
         with st.form("add_machine_form"):
-            col1, col2 = st.columns(2)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 make = st.text_input("Make*", placeholder="Caterpillar")
                 model = st.text_input("Model*", placeholder="320D")
                 year = st.number_input("Year*", min_value=1900, max_value=2030, value=2020)
                 serial_number = st.text_input("Serial Number*", placeholder="CAT123456")
+                whites_id = st.text_input("Whites ID", placeholder="W001")
             
             with col2:
                 machine_type = st.selectbox("Machine Type*", [
@@ -618,7 +631,14 @@ def show_machine_inventory_content():
                 ])
                 hours = st.number_input("Operating Hours*", min_value=0, value=0)
                 weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=10.0, format="%.1f")
+                vin_chassis = st.text_input("VIN/Chassis", placeholder="VIN123456789")
                 status = st.selectbox("Status*", ["Active", "Maintenance", "Retired"])
+            
+            with col3:
+                daily_rate = st.number_input("Daily Rate (£)", min_value=0.0, value=0.0, format="%.2f")
+                weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, value=0.0, format="%.2f")
+                defects = st.text_area("Defects", placeholder="List any known defects...")
+                notes = st.text_area("Notes", placeholder="Additional notes...")
             
             if st.form_submit_button("Add Machine", use_container_width=True):
                 if make and model and serial_number:
@@ -630,7 +650,13 @@ def show_machine_inventory_content():
                         'machine_type': machine_type,
                         'hours': hours,
                         'weight': weight,
-                        'status': status
+                        'status': status,
+                        'whites_id': whites_id if whites_id else None,
+                        'vin_chassis': vin_chassis if vin_chassis else None,
+                        'daily_rate': daily_rate if daily_rate > 0 else None,
+                        'weekly_rate': weekly_rate if weekly_rate > 0 else None,
+                        'defects': defects if defects else None,
+                        'notes': notes if notes else None
                     }
                     dm.add_machine(machine_data)
                     st.success(f"✅ Machine {make} {model} added successfully!")
