@@ -319,6 +319,70 @@ def show_vehicle_inventory_content(vehicles_df):
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
         else:
             st.dataframe(display_vehicles, use_container_width=True, hide_index=True)
+        
+        # Edit vehicle functionality
+        st.markdown("### Edit Vehicle")
+        if not vehicles_df.empty:
+            vehicle_options = [f"{row['make']} {row['model']} ({row['license_plate']})" 
+                             for _, row in vehicles_df.iterrows()]
+            selected_vehicle = st.selectbox("Select Vehicle to Edit", vehicle_options)
+            selected_idx = vehicle_options.index(selected_vehicle)
+            selected_vehicle_data = vehicles_df.iloc[selected_idx]
+            
+            with st.expander("✏️ Edit Selected Vehicle"):
+                with st.form("edit_vehicle_form"):
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        make = st.text_input("Make*", value=selected_vehicle_data.get('make', ''))
+                        model = st.text_input("Model*", value=selected_vehicle_data.get('model', ''))
+                        year = st.number_input("Year*", min_value=1900, max_value=2030, value=int(selected_vehicle_data.get('year', 2020)))
+                        license_plate = st.text_input("License Plate*", value=selected_vehicle_data.get('license_plate', ''))
+                        fuel_type = st.selectbox("Fuel Type*", ["Petrol", "Diesel", "Electric", "Hybrid"], 
+                                                index=["Petrol", "Diesel", "Electric", "Hybrid"].index(selected_vehicle_data.get('fuel_type', 'Diesel')))
+                    
+                    with col2:
+                        whites_id = st.text_input("Whites ID", value=selected_vehicle_data.get('whites_id', '') if pd.notna(selected_vehicle_data.get('whites_id')) else '')
+                        vin_chassis = st.text_input("VIN/Chassis", value=selected_vehicle_data.get('vin_chassis', '') if pd.notna(selected_vehicle_data.get('vin_chassis')) else '')
+                        vehicle_type = st.selectbox("Vehicle Type", ["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"], 
+                                                   index=["Car", "Van", "Truck", "Lorry", "Bus", "Motorcycle", "Other"].index(selected_vehicle_data.get('vehicle_type', 'Car')) if pd.notna(selected_vehicle_data.get('vehicle_type')) else 0)
+                        mileage = st.number_input("Mileage*", min_value=0, value=int(selected_vehicle_data.get('mileage', 0)))
+                        weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=float(selected_vehicle_data.get('weight', 1.5)), format="%.1f")
+                    
+                    with col3:
+                        status = st.selectbox("Status*", ["Active", "Maintenance", "Retired"], 
+                                             index=["Active", "Maintenance", "Retired"].index(selected_vehicle_data.get('status', 'Active')))
+                        defects = st.text_area("Defects", value=selected_vehicle_data.get('defects', '') if pd.notna(selected_vehicle_data.get('defects')) else '')
+                        notes = st.text_area("Notes", value=selected_vehicle_data.get('notes', '') if pd.notna(selected_vehicle_data.get('notes')) else '')
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.form_submit_button("Update Vehicle", use_container_width=True):
+                            updated_vehicle = selected_vehicle_data.copy()
+                            updated_vehicle['make'] = make
+                            updated_vehicle['model'] = model
+                            updated_vehicle['year'] = year
+                            updated_vehicle['license_plate'] = license_plate
+                            updated_vehicle['fuel_type'] = fuel_type
+                            updated_vehicle['mileage'] = mileage
+                            updated_vehicle['weight'] = weight
+                            updated_vehicle['status'] = status
+                            updated_vehicle['whites_id'] = whites_id if whites_id else None
+                            updated_vehicle['vin_chassis'] = vin_chassis if vin_chassis else None
+                            updated_vehicle['vehicle_type'] = vehicle_type if vehicle_type else None
+                            updated_vehicle['defects'] = defects if defects else None
+                            updated_vehicle['notes'] = notes if notes else None
+                            
+                            dm = get_data_manager()
+                            dm.update_vehicle(updated_vehicle)
+                            st.success(f"✅ Vehicle {make} {model} updated successfully!")
+                            st.rerun()
+                    
+                    with col2:
+                        if st.form_submit_button("Delete Vehicle", use_container_width=True):
+                            dm = get_data_manager()
+                            dm.delete_vehicle(selected_vehicle_data['vehicle_id'])
+                            st.success(f"✅ Vehicle {selected_vehicle_data['make']} {selected_vehicle_data['model']} deleted successfully!")
+                            st.rerun()
     else:
         st.info("No vehicles found. Add your first vehicle above.")
 
@@ -430,38 +494,93 @@ def show_dashboard_content(vehicles_df, maintenance_df, equipment_df, rentals_df
     """Dashboard content with metrics and charts"""
     st.markdown("### 📊 Dashboard Overview")
     
-    # Metrics
+    # Load machines data
+    dm = get_data_manager()
+    machines_df = dm.load_machines()
+    
+    # Metrics - reordered to vehicles, machines, tool hire
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.metric(
-            label="🚗 Total Vehicles",
-            value=len(vehicles_df),
-            delta=f"{len(vehicles_df[vehicles_df['status'] == 'Active'])} Active" if not vehicles_df.empty else "0 Active"
-        )
+        active_vehicles = len(vehicles_df[vehicles_df['status'] == 'Active']) if not vehicles_df.empty else 0
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        ">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚗</div>
+            <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem;">{len(vehicles_df)}</div>
+            <div style="font-size: 1rem; font-weight: 500; opacity: 0.9;">Total Vehicles</div>
+            <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">↑ {active_vehicles} Active</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col2:
-        total_maintenance_cost = maintenance_df['cost'].sum() if not maintenance_df.empty else 0
-        st.metric(
-            label="💰 Maintenance Cost",
-            value=f"£{total_maintenance_cost:,.2f}",
-            delta=f"{len(maintenance_df)} Records"
-        )
+        active_machines = len(machines_df[machines_df['status'] == 'Active']) if not machines_df.empty else 0
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        ">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏗️</div>
+            <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem;">{len(machines_df)}</div>
+            <div style="font-size: 1rem; font-weight: 500; opacity: 0.9;">Total Machines</div>
+            <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">↑ {active_machines} Active</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col3:
-        st.metric(
-            label="⚙️ Equipment Items",
-            value=len(equipment_df),
-            delta=f"{len(equipment_df[equipment_df['status'] == 'Available'])} Available" if not equipment_df.empty else "0 Available"
-        )
+        available_equipment = len(equipment_df[equipment_df['status'] == 'Available']) if not equipment_df.empty else 0
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        ">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+            <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem;">{len(equipment_df)}</div>
+            <div style="font-size: 1rem; font-weight: 500; opacity: 0.9;">Tool Hire</div>
+            <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">↑ {available_equipment} Available</div>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col4:
-        total_rental_revenue = rentals_df['rental_rate'].sum() if not rentals_df.empty else 0
-        st.metric(
-            label="💵 Rental Revenue",
-            value=f"£{total_rental_revenue:,.2f}",
-            delta=f"{len(rentals_df)} Rentals"
-        )
+        total_maintenance_cost = maintenance_df['cost'].sum() if not maintenance_df.empty else 0
+        maintenance_records = len(maintenance_df)
+        st.markdown(f"""
+        <div style="
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        ">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+            <div style="font-size: 1.8rem; font-weight: 700; margin-bottom: 0.3rem;">£{total_maintenance_cost:,.0f}</div>
+            <div style="font-size: 1rem; font-weight: 500; opacity: 0.9;">Maintenance</div>
+            <div style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.8;">↑ {maintenance_records} Records</div>
+        </div>
+        """, unsafe_allow_html=True)
     
 
 
@@ -575,6 +694,89 @@ def show_tool_hire_content(equipment_df, rentals_df):
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
         else:
             st.dataframe(display_equipment, use_container_width=True, hide_index=True)
+        
+        # Edit equipment functionality
+        st.markdown("### Edit Equipment")
+        equipment_options = [f"{row['name']} ({row['category']})" 
+                           for _, row in equipment_df.iterrows()]
+        selected_equipment = st.selectbox("Select Equipment to Edit", equipment_options)
+        selected_idx = equipment_options.index(selected_equipment)
+        selected_equipment_data = equipment_df.iloc[selected_idx]
+        
+        with st.expander("✏️ Edit Selected Equipment"):
+            with st.form("edit_equipment_form"):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    name = st.text_input("Equipment Name*", value=selected_equipment_data.get('name', ''))
+                    category = st.selectbox("Category*", [
+                        "Excavation", "Lifting", "Cutting", "Drilling", 
+                        "Measuring", "Safety", "Other"
+                    ], index=["Excavation", "Lifting", "Cutting", "Drilling", "Measuring", "Safety", "Other"].index(selected_equipment_data.get('category', 'Other')))
+                    brand = st.text_input("Brand", value=selected_equipment_data.get('brand', '') if pd.notna(selected_equipment_data.get('brand')) else '')
+                    model = st.text_input("Model", value=selected_equipment_data.get('model', '') if pd.notna(selected_equipment_data.get('model')) else '')
+                    serial_number = st.text_input("Serial Number", value=selected_equipment_data.get('serial_number', '') if pd.notna(selected_equipment_data.get('serial_number')) else '')
+                
+                with col2:
+                    daily_rate = st.number_input("Daily Rate (£)*", min_value=0.0, value=float(selected_equipment_data.get('daily_rate', 0)), format="%.2f")
+                    weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, value=float(selected_equipment_data.get('weekly_rate', 0)) if pd.notna(selected_equipment_data.get('weekly_rate')) else 0.0, format="%.2f")
+                    purchase_price = st.number_input("Purchase Price (£)", min_value=0.0, value=float(selected_equipment_data.get('purchase_price', 0)) if pd.notna(selected_equipment_data.get('purchase_price')) else 0.0, format="%.2f")
+                    
+                    # Handle date inputs
+                    purchase_date = selected_equipment_data.get('purchase_date')
+                    if pd.notna(purchase_date) and purchase_date:
+                        try:
+                            purchase_date_val = pd.to_datetime(purchase_date).date()
+                        except:
+                            purchase_date_val = None
+                    else:
+                        purchase_date_val = None
+                    purchase_date_input = st.date_input("Purchase Date", value=purchase_date_val)
+                    
+                    last_service_date = selected_equipment_data.get('last_service_date')
+                    if pd.notna(last_service_date) and last_service_date:
+                        try:
+                            last_service_date_val = pd.to_datetime(last_service_date).date()
+                        except:
+                            last_service_date_val = None
+                    else:
+                        last_service_date_val = None
+                    last_service_date_input = st.date_input("Last Service Date", value=last_service_date_val)
+                
+                with col3:
+                    status = st.selectbox("Status*", ["Available", "Rented", "Maintenance", "Retired"], 
+                                         index=["Available", "Rented", "Maintenance", "Retired"].index(selected_equipment_data.get('status', 'Available')))
+                    description = st.text_area("Description", value=selected_equipment_data.get('description', '') if pd.notna(selected_equipment_data.get('description')) else '')
+                    notes = st.text_area("Notes", value=selected_equipment_data.get('notes', '') if pd.notna(selected_equipment_data.get('notes')) else '')
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.form_submit_button("Update Equipment", use_container_width=True):
+                        updated_equipment = selected_equipment_data.copy()
+                        updated_equipment['name'] = name
+                        updated_equipment['category'] = category
+                        updated_equipment['daily_rate'] = daily_rate
+                        updated_equipment['status'] = status
+                        updated_equipment['brand'] = brand if brand else None
+                        updated_equipment['model'] = model if model else None
+                        updated_equipment['serial_number'] = serial_number if serial_number else None
+                        updated_equipment['weekly_rate'] = weekly_rate if weekly_rate > 0 else None
+                        updated_equipment['purchase_price'] = purchase_price if purchase_price > 0 else None
+                        updated_equipment['purchase_date'] = purchase_date_input.strftime('%Y-%m-%d') if purchase_date_input else None
+                        updated_equipment['last_service_date'] = last_service_date_input.strftime('%Y-%m-%d') if last_service_date_input else None
+                        updated_equipment['description'] = description if description else None
+                        updated_equipment['notes'] = notes if notes else None
+                        
+                        dm = get_data_manager()
+                        dm.update_equipment(updated_equipment)
+                        st.success(f"✅ Equipment {name} updated successfully!")
+                        st.rerun()
+                
+                with col2:
+                    if st.form_submit_button("Delete Equipment", use_container_width=True):
+                        dm = get_data_manager()
+                        dm.delete_equipment(selected_equipment_data['equipment_id'])
+                        st.success(f"✅ Equipment {selected_equipment_data['name']} deleted successfully!")
+                        st.rerun()
     else:
         st.info("No equipment found. Add your first equipment above.")
 
@@ -711,6 +913,72 @@ def show_machine_inventory_content():
             st.dataframe(styled_df, use_container_width=True, hide_index=True)
         else:
             st.dataframe(display_machines, use_container_width=True, hide_index=True)
+        
+        # Edit machine functionality
+        st.markdown("### Edit Machine")
+        machine_options = [f"{row['make']} {row['model']} ({row['serial_number']})" 
+                          for _, row in machines_df.iterrows()]
+        selected_machine = st.selectbox("Select Machine to Edit", machine_options)
+        selected_idx = machine_options.index(selected_machine)
+        selected_machine_data = machines_df.iloc[selected_idx]
+        
+        with st.expander("✏️ Edit Selected Machine"):
+            with st.form("edit_machine_form"):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    make = st.text_input("Make*", value=selected_machine_data.get('make', ''))
+                    model = st.text_input("Model*", value=selected_machine_data.get('model', ''))
+                    year = st.number_input("Year*", min_value=1900, max_value=2030, value=int(selected_machine_data.get('year', 2020)))
+                    serial_number = st.text_input("Serial Number*", value=selected_machine_data.get('serial_number', ''))
+                    whites_id = st.text_input("Whites ID", value=selected_machine_data.get('whites_id', '') if pd.notna(selected_machine_data.get('whites_id')) else '')
+                
+                with col2:
+                    machine_type = st.selectbox("Machine Type*", [
+                        "Excavator", "Bulldozer", "Loader", "Crane", 
+                        "Compactor", "Grader", "Other"
+                    ], index=["Excavator", "Bulldozer", "Loader", "Crane", "Compactor", "Grader", "Other"].index(selected_machine_data.get('machine_type', 'Other')))
+                    hours = st.number_input("Operating Hours*", min_value=0, value=int(selected_machine_data.get('hours', 0)))
+                    weight = st.number_input("Weight (tonnes)*", min_value=0.0, value=float(selected_machine_data.get('weight', 10.0)), format="%.1f")
+                    vin_chassis = st.text_input("VIN/Chassis", value=selected_machine_data.get('vin_chassis', '') if pd.notna(selected_machine_data.get('vin_chassis')) else '')
+                    status = st.selectbox("Status*", ["Active", "Maintenance", "Retired"], 
+                                         index=["Active", "Maintenance", "Retired"].index(selected_machine_data.get('status', 'Active')))
+                
+                with col3:
+                    daily_rate = st.number_input("Daily Rate (£)", min_value=0.0, value=float(selected_machine_data.get('daily_rate', 0)) if pd.notna(selected_machine_data.get('daily_rate')) else 0.0, format="%.2f")
+                    weekly_rate = st.number_input("Weekly Rate (£)", min_value=0.0, value=float(selected_machine_data.get('weekly_rate', 0)) if pd.notna(selected_machine_data.get('weekly_rate')) else 0.0, format="%.2f")
+                    defects = st.text_area("Defects", value=selected_machine_data.get('defects', '') if pd.notna(selected_machine_data.get('defects')) else '')
+                    notes = st.text_area("Notes", value=selected_machine_data.get('notes', '') if pd.notna(selected_machine_data.get('notes')) else '')
+                
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.form_submit_button("Update Machine", use_container_width=True):
+                        updated_machine = selected_machine_data.copy()
+                        updated_machine['make'] = make
+                        updated_machine['model'] = model
+                        updated_machine['year'] = year
+                        updated_machine['serial_number'] = serial_number
+                        updated_machine['machine_type'] = machine_type
+                        updated_machine['hours'] = hours
+                        updated_machine['weight'] = weight
+                        updated_machine['status'] = status
+                        updated_machine['whites_id'] = whites_id if whites_id else None
+                        updated_machine['vin_chassis'] = vin_chassis if vin_chassis else None
+                        updated_machine['daily_rate'] = daily_rate if daily_rate > 0 else None
+                        updated_machine['weekly_rate'] = weekly_rate if weekly_rate > 0 else None
+                        updated_machine['defects'] = defects if defects else None
+                        updated_machine['notes'] = notes if notes else None
+                        
+                        dm = get_data_manager()
+                        dm.update_machine(updated_machine)
+                        st.success(f"✅ Machine {make} {model} updated successfully!")
+                        st.rerun()
+                
+                with col2:
+                    if st.form_submit_button("Delete Machine", use_container_width=True):
+                        dm = get_data_manager()
+                        dm.delete_machine(selected_machine_data['machine_id'])
+                        st.success(f"✅ Machine {selected_machine_data['make']} {selected_machine_data['model']} deleted successfully!")
+                        st.rerun()
     else:
         st.info("No machines found. Add your first machine above.")
 

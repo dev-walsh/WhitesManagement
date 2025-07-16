@@ -1,6 +1,1 @@
-vehicle_id,whites_id,vin_chassis,make,model,year,weight,license_plate,vehicle_type,status,mileage,defects,notes,fuel_type
-8c89557f,,,Toyota,Hilux,2020,2.1,ABC123,,Active,45000,,,Diesel
-bc421a10,,,Ford,Transit,2019,2.8,DEF456,,Active,62000,,,Diesel
-26a4100d,,,Volvo,XC90,2021,2.2,GHI789,,Maintenance,28000,,,Hybrid
-75d57369,,,BMW,X5,2018,2.0,JKL012,,Active,78000,,,Petrol
-8cf99fd6,,,Mercedes,Sprinter,2022,3.5,MNO345,,Active,15000,,,Electric
+vehicle_id,whites_id,vin_chassis,make,model,year,weight,license_plate,vehicle_type,status,mileage,defects,notes
